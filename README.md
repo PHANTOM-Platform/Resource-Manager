@@ -1,2 +1,3 @@
-# Execution-Manager
-Server which keeps track of the Status of the Users' APPs
+# Resource-Manager
+Server which keeps track of the Status of the Available hardware in the system
+
