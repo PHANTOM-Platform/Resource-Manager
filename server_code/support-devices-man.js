@@ -26,12 +26,12 @@ compose_query: function(device ){
 	}
 	if(mquery!=undefined  && id_string.length >0) {
 		mquery={"query":{"bool":{"must": mquery }}};
-	}else{ 
+	}else{
 		mquery={"query":{"match_all": {} }};
 	}
 	return mquery;
 },
-compose_query_id: function(id_string ){ 
+compose_query_id: function(id_string ){
 	var mquery;
 	if (id_string != undefined && id_string.length >0) {
 		mquery={"query":{"match":{"_id":id_string}}};
@@ -40,7 +40,7 @@ compose_query_id: function(id_string ){
 	}
 	return mquery;
 },
-compose_query_status_id: function(id_string ){ 
+compose_query_status_id: function(id_string ){
 	var mquery;
 	if (id_string != undefined && id_string.length >0) {
 		mquery={"query":{"match":{"device_id":id_string}}};
@@ -49,7 +49,7 @@ compose_query_status_id: function(id_string ){
 	}
 	return mquery;
 },
-compose_query_status: function(id_string ){ 
+compose_query_status: function(id_string ){
 	var mquery;
 	if (id_string != undefined && id_string.length >0) {
 		mquery={"query":{"bool":{"must":[{"match_phrase":{"host":id_string}}, {"term": {"host_length": id_string.length} } ]}}};
@@ -58,10 +58,10 @@ compose_query_status: function(id_string ){
 	}
 	return mquery;
 },
-compose_query_mf_config: function(id_string ){ 
+compose_query_mf_config: function(id_string ){
 	var mquery;
 	if (id_string != undefined && id_string.length >0) {
-		mquery={"query":{"bool":{"must":[{"match_phrase":{"generic.host":id_string}}, {"term": {"generic.host_length": id_string.length} } ]}}};
+		mquery={"query":{"bool":{"must":[{"match_phrase":{"generic.platform_id":id_string}}, {"term": {"generic.platform_id_length": id_string.length} } ]}}};
 	}else{
 		mquery={"query":{"match_all": {} }};
 	}
@@ -90,7 +90,7 @@ register_json: function(es_server, my_index, body, remoteAddress, my_type) {
 				verify_flush.then((resolve_result) => {
 					myres.code="200";
 					myres.text="succeed ";
-					resolve (myres); 
+					resolve (myres);
 				},(reject_result)=> {
 					myres.code=reject_result.code;
 					myres.text=reject_result.text+response;
@@ -109,7 +109,7 @@ update_device_status_json: function(es_server, my_index, body, status_id, remote
 		var clientb = new elasticsearch.Client({
 			host: es_server,
 			log: 'error'
-		}); 
+		});
 		var mergejson = JSON.parse(body);
 		clientb.update({//index replaces the json in the DB with the new one
 			index: my_index,
@@ -123,9 +123,9 @@ update_device_status_json: function(es_server, my_index, body, status_id, remote
 				var verify_flush = CommonModule.my_flush(remoteAddress ,es_server,my_index);
 				verify_flush.then((resolve_result) => {
 					resolve ("Succeed" );
-				},(reject_result)=> { 
+				},(reject_result)=> {
 					reject ("Flush error" );
-				}); 
+				});
 			}
 		});//end query client.index 
 	});
@@ -174,7 +174,7 @@ find_mf_config_id: function(es_server, my_index, device){
 			type: my_type,
 			body: {
 				"query":{"bool":{"must":[
-					{"match_phrase":{"generic.host": device }}, {"term":{"generic.host_length": device.length}}
+					{"match_phrase":{"generic.platform_id": device }}, {"term":{"generic.platform_id_length": device.length}}
 				]}}
 			}
 		}, function(error, response) {
@@ -234,20 +234,20 @@ find_device: function(es_server, my_index, device, pretty){
 				type: my_type,
 				size: 10000,
 				body:{"query":{"match_all": {} }}
-			}, function(error, response) { 
+			}, function(error, response) {
 				if (error){
 					reject("search error: "+error)
 				} else {
 					var result="";
 					var keys = Object.keys(response.hits.hits);
-					keys.forEach(function(key) { 
+					keys.forEach(function(key) {
 						item = JSON.parse(JSON.stringify(response.hits.hits[key]._source));
 						if(result!=""){
 							result+=",";
 						}
-						if((pretty=="true")||(pretty=="TRUE")){ 
+						if((pretty=="true")||(pretty=="TRUE")){
 							result+=" "+(JSON.stringify(item, null, 4));
-						}else{ 
+						}else{
 							result+=" "+(JSON.stringify(item));
 						}
 					});
@@ -268,9 +268,9 @@ find_device: function(es_server, my_index, device, pretty){
 					reject ("error: "+error);
 				}else{
 					item = JSON.parse(JSON.stringify(response.hits.hits[0]._source));
-					if((pretty=="true")||(pretty=="TRUE")){ 
+					if((pretty=="true")||(pretty=="TRUE")){
 						resolve(" "+(JSON.stringify(item, null, 4)));
-					}else{ 
+					}else{
 						resolve(" "+(JSON.stringify(item)));
 					}
 				}
@@ -280,7 +280,7 @@ find_device: function(es_server, my_index, device, pretty){
 },
 //****************************************************
 //This function is used to confirm that an user exists or not in the DataBase.
-query_count_device_id: function(es_server, my_index, device_id){ 
+query_count_device_id: function(es_server, my_index, device_id){
 	const my_type = 'devices';
 	return new Promise( (resolve,reject) => {
 		var elasticsearch = require('elasticsearch');
@@ -349,7 +349,7 @@ query_count_device: function(es_server, my_index, device){
 					]}}
 				}
 			}, function(error, response) {
-				if (error) { 
+				if (error) {
 					reject (error);
 				}
 				if (response.count !== undefined) {
@@ -363,7 +363,7 @@ query_count_device: function(es_server, my_index, device){
 }, //end query_count_device
 //****************************************************
 // //This function is used to confirm that an user exists or not in the DataBase.
-// query_count_mf_device: function(es_server, my_index, device_id){ 
+// query_count_mf_device: function(es_server, my_index, device_id){
 // 	const my_type = 'devices';
 // 	return new Promise( (resolve,reject) => {
 // 		var elasticsearch = require('elasticsearch');
@@ -433,11 +433,11 @@ query_count_mf_config: function(es_server, my_index, device){
 				type: my_type,
 				body: {
 					"query":{"bool":{"must":[
-						{"match_phrase":{"generic.host": device }}, {"term":{"generic.host_length": device.length}}
+						{"match_phrase":{"generic.platform_id": device }}, {"term":{"generic.platform_id_length": device.length}}
 					]}}
 				}
 			}, function(error, response) {
-				if (error) { 
+				if (error) {
 					reject (error);
 				}
 				if (response.count !== undefined) {
@@ -451,7 +451,7 @@ query_count_mf_config: function(es_server, my_index, device){
 }, //end query_count_mf_config
 //****************************************************
 //This function is used to confirm that an user exists or not in the DataBase.
-query_count_device_status: function(es_server, my_index, device_id){ 
+query_count_device_status: function(es_server, my_index, device_id){
 	const my_type = 'devices_status';
 	return new Promise( (resolve,reject) => {
 		var elasticsearch = require('elasticsearch');
@@ -469,7 +469,7 @@ query_count_device_status: function(es_server, my_index, device_id){
 					"query":{"match":{"device_id": device_id }}
 				}
 			}, function(error, response) {
-				if (error) { 
+				if (error) {
 					reject (error);
 				}
 				if (response.count !== undefined) {
@@ -502,14 +502,14 @@ query_device: function(es_server, my_index, bodyquery, pretty) {
 				reject("search error: "+error)
 			} else {
 				var keys = Object.keys(response.hits.hits);
-				keys.forEach(function(key) { 
+				keys.forEach(function(key) {
 					item = JSON.parse(JSON.stringify(response.hits.hits[key]._source));
 					if(result!=""){
 						result+=",";
 					}
-					if((pretty=="true")||(pretty=="TRUE")){ 
+					if((pretty=="true")||(pretty=="TRUE")){
 						result+=" "+(JSON.stringify(item, null, 4));
-					}else{ 
+					}else{
 						result+=" "+(JSON.stringify(item));
 					}
 				});
@@ -544,12 +544,12 @@ query_device_status: function(es_server, my_index, device_id, pretty) {//<<<<<
 					reject({ "search error" : error });
 				} else {
 					var keys = Object.keys(response.hits.hits);
-					keys.forEach(function(key) { 
+					keys.forEach(function(key) {
 						item = JSON.parse(JSON.stringify(response.hits.hits[key]._source));
 						if(resultb!=""){
 							resultb+=",";
 						}
-						if((pretty=="true")||(pretty=="TRUE")){ 
+						if((pretty=="true")||(pretty=="TRUE")){
 							resultb+=" "+(JSON.stringify(item, null, 4));
 						}else{
 							resultb+=" "+(JSON.stringify(item));
@@ -559,13 +559,13 @@ query_device_status: function(es_server, my_index, device_id, pretty) {//<<<<<
 				};
 			});
 		});
-		newalgo.then((resultResolve) => { 
+		newalgo.then((resultResolve) => {
 // 			console.log("query_device_status response is :"+resultResolve);
 			resolve("{\"hits\" :["+resultResolve+"]}");	
 // 			resolve(resultResolve);
 		},(resultReject)=> {
 			reject( { "error ": resultReject });
-		}); 
+		});
 	});
 },//end query_device_status
 //**********************************************************
@@ -593,12 +593,12 @@ query_device_mf_config: function(es_server, my_index, device_id, pretty) {//<<<<
 					reject("search error: "+error)
 				} else {
 					var keys = Object.keys(response.hits.hits);
-					keys.forEach(function(key) { 
+					keys.forEach(function(key) {
 						item = JSON.parse(JSON.stringify(response.hits.hits[key]._source));
 						if(resultb!=""){
 							resultb+=",";
 						}
-						if((pretty=="true")||(pretty=="TRUE")){ 
+						if((pretty=="true")||(pretty=="TRUE")){
 							resultb+=" "+(JSON.stringify(item, null, 4));
 						}else{
 							resultb+=" "+(JSON.stringify(item));
@@ -608,12 +608,12 @@ query_device_mf_config: function(es_server, my_index, device_id, pretty) {//<<<<
 				};
 			});
 		});
-		newalgo.then((resultResolve) => { 
+		newalgo.then((resultResolve) => {
 			resolve("{\"hits\" :["+resultResolve+"]}");	
 // 			resolve(resultResolve);
 		},(resultReject)=> {
 			reject("error: "+resultReject);
-		}); 
+		});
 	});
 },//end query_device_mf_config
 
@@ -637,16 +637,16 @@ query_device_status_old: function(es_server, my_index, device_id, pretty) {
 			},function (error, response,status) {
 				if (error){
 					reject("search error: "+error)
-				} else { 
+				} else {
 					var keys = Object.keys(response.hits.hits);
 					keys.forEach(function(key) {
 						item = JSON.parse(JSON.stringify(response.hits.hits[key]._source));
 						if(resulta!=""){
 							resulta+=",";
 						}
-						if((pretty=="true")||(pretty=="TRUE")){ 
+						if((pretty=="true")||(pretty=="TRUE")){
 							resulta+=" "+(JSON.stringify(item, null, 4));
-						}else{ 
+						}else{
 							resulta+=" "+(JSON.stringify(item));
 						}
 					});
@@ -668,12 +668,12 @@ query_device_status_old: function(es_server, my_index, device_id, pretty) {
 						reject("search error: "+error)
 					} else {
 						var keys = Object.keys(response.hits.hits);
-						keys.forEach(function(key) { 
+						keys.forEach(function(key) {
 							item = JSON.parse(JSON.stringify(response.hits.hits[key]._source));
 							if(resultb!=""){
 								resultb+=",";
 							}
-							if((pretty=="true")||(pretty=="TRUE")){ 
+							if((pretty=="true")||(pretty=="TRUE")){
 								resultb+=" "+(JSON.stringify(item, null, 4));
 							}else{
 								resultb+=" "+(JSON.stringify(item));
@@ -683,7 +683,7 @@ query_device_status_old: function(es_server, my_index, device_id, pretty) {
 					};
 				});
 			});
-			newalgo.then((resultResolve) => { 
+			newalgo.then((resultResolve) => {
 // 				resolve("{\"hits\" :["+resultResolve+"]}");	
 				resolve(resultResolve);
 			},(resultReject)=> {

@@ -1114,9 +1114,8 @@ function register_mf_config_json(req, res, new_mf_config, jsontext){
 	//2 If not existing in the db, then we will just register the JSON content
 	//3 if already exists, we need to merge with the existing entries, updating those fields redefined in the json
 	var devicename= get_value_mf_config(jsontext,"platform_id");//(1) parsing the JSON
-// 	jsontext =update_device_length_on_json(jsontext, devicename); //this adds the field device.length	
-	
-	//TODO generate generic.host_length
+// 	jsontext =update_device_length_on_json(jsontext, devicename); //this adds the field device.length
+
 // 	console.log("send_device_update_to_suscribers("+devicename+")");
 // 	send_device_update_to_suscribers(devicename,jsontext);
 	var result_count = DeviceModule.query_count_mf_config(es_servername + ":" + es_port,SERVERDB, devicename);
@@ -1215,7 +1214,24 @@ function register_mf_config(req, res, new_mf_config){
 		return;
 	}
 	var jsontext =req.files.UploadJSON.data.toString('utf8');
-	register_mf_config_json(req, res, new_mf_config,jsontext);
+	var devicename= get_value_mf_config(jsontext,"platform_id");
+	if(devicename==undefined){
+		res.writeHead(400, { 'Content-Type': contentType_text_plain });
+		res.end('Error: Missing field platform_id in Json file!');
+		return;
+	}
+	if(devicename.length== 0){
+		res.writeHead(400, { 'Content-Type': contentType_text_plain });
+		res.end('Error: Missing field platform_id in Json file!');
+		return;
+	}
+	
+	var jsontext_obj=JSON.parse(jsontext);
+	jsontext_obj.generic.platform_id_length  = devicename.length;
+		console.log(JSON.stringify(jsontext_obj,null,2));
+	
+	var jsontext = JSON.stringify(jsontext_obj);
+	register_mf_config_json(req, res, new_mf_config, jsontext);
 }//register_mf_config
 //**********************************************************
 /**
@@ -1493,7 +1509,7 @@ app.get('/query_device_status',middleware.ensureAuthenticated, function(req, res
 app.get('/query_device_mf_config',middleware.ensureAuthenticated, function(req, res) {
 	var currentdate	= dateFormat(new Date(), "yyyy-mm-dd'T'HH:MM:ss.l");
 	var pretty 		= find_param(req.body.pretty, req.query.pretty);
-	var devicename	= find_param(req.body.device, req.query.device);
+	var devicename	= find_param(req.body.device, req.query.device);//platform_id
 	devicename= validate_parameter(devicename,"device",currentdate,res.user, req.connection.remoteAddress);//generates the error log if not defined
 	if(devicename==undefined) devicename="";
 // 	if (devicename.length == 0){ not need, if not provided, then we list all the devices !!
@@ -1582,6 +1598,7 @@ app.post('/myform_device_mf_config_update', function(req, res){
 var jsontext_obj={
 	generic : {
 		platform_id : req.body.generic.platform_id,
+		platform_id_length : req.body.generic.platform_id.length,
 		bulk_size : req.body.generic.bulk_size
 	}, plugins : {
 		mf_plugin_board_power : req.body.plugins.mf_plugin_board_power,
@@ -1641,7 +1658,7 @@ var jsontext_obj={
 		dram_power : req.body.mf_plugin_rapl_power.dram_power
 	}
 };
-	console.log(JSON.stringify(jsontext_obj,null,2));
+// 	console.log(JSON.stringify(jsontext_obj,null,2));
 	var new_mf_config = false;
 	var jsontext = JSON.stringify(jsontext_obj);
 	register_mf_config_json(req, res, new_mf_config,jsontext);
