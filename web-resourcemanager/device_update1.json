@@ -1,0 +1,12 @@
+{
+  "device": "HLRS Raspberry pi3",
+  "mac":"00:11:22:33:44:55",
+  "ip":"192.168.0.55",
+  "cpu_type": "armv7",
+  "cpu_cores": 4,
+  "ram_size_bytes": 1073741824,
+  "gpu_type":"NA",
+  "fpga_type":"NA",
+  "fpga_logic_gates":0,
+  "hide": "false"
+}

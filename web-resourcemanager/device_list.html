@@ -1,0 +1,53 @@
+<!DOCTYPE HTML>
+<html lang="en" xml:lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<meta name="description" content="Lists the registered devices in the PHANTOM Resource Manager-server">
+	<meta name="keywords" content="HTML,CSS,JavaScript">
+	<meta name="author" content="Jose Miguel Montañana, hpcjmont@hlrs.de">
+	<meta name="reply-to" content="hpcjmont@hlrs.de">
+	<meta name="copyright" content="Copyright (C) 2018 University of Stuttgart">
+	<meta name="language" content="EN">
+	<meta name="revised" content="July 4, 2018" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta name="robots" content="noindex">
+	<meta name="googlebot" content="noindex">
+	<meta charset="utf-8">
+	<title>PHANTOM RESOURCE-MANAGER</title>
+	<link rel="stylesheet" type="text/css" href="phantom.css">
+	<script src="devicemanager.js"></script>
+</head>
+
+<body onload="start_page_new()">
+	<div id="menu_phantom"></div>
+	<h1><b>LIST OF Registered DEVICEs</b></h1>
+	<h2><b> Online formular: Retrieve List of DEVICEs</b></h2>
+		<form 
+		id='queryForm'
+		method='get'
+		name="myForm"
+		encType="multipart/form-data">
+		<div class="center">
+		DEVICE name (optional): <input type="text" name="appname" id="appname" value=""> leave empty if not wish to filter by name<br>
+		<input type="hidden" name="pretty" value="true">
+		<!-- upload button-->
+		<input type="submit" onclick="return list_devices(4,document.getElementById('appname').value)" value="ONLY list the name of the Devices" />
+		<input type="submit" onclick="return list_devices(1,document.getElementById('appname').value)" value="Show results in Table" />
+		<input type="submit" onclick="return list_devices(2,document.getElementById('appname').value)" value="Show results as JSON" />
+		<input type="submit" onclick="return list_devices(3,document.getElementById('appname').value)" value="Show raw reply from server" />
+	</div>
+	</form>
+
+	<!--<b>Tested command line example with curl:</b>
+	<p style="color:DodgerBlue;">
+	curl -XGET 'http://localhost:8000/query_metadata?Path=mypath%2F&filename=main.c'
+	</p>-->
+
+	<div id="debug_phantom" style="display:none">
+		<hr><p id="demoreplaceb"></p>
+	</div>
+
+	<div id="foot_phantom"></div>
+
+	<script> load_header_footer(); </script>
+</body>
+</html>
