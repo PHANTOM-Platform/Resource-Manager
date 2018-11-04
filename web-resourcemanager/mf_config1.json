@@ -1,8 +1,6 @@
 {
 	"generic" : {
 		"platform_id" : "node01",
-		"host":"node01",
-		"host_length": 6,
 		"bulk_size" : 8
 	},
 	"plugins" :  {

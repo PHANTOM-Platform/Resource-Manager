@@ -664,7 +664,7 @@ function list_status_devices(mytype,devicename){
 function list_mf_config_devices(mytype,devicename){ 
 	// get_plugin_status localhost 9400 "node01";
 	var url="http://"+deviceserver+":"+deviceport+"/query_device_mf_config?device=\""+devicename+"\"";//?pretty='true'"; 
-	list_results_with_token(mytype,url,["host"],["_length"] );
+	list_results_with_token(mytype,url,["platform_id"],["_length"] );
 	return false;
 }
 
