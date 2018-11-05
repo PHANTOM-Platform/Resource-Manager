@@ -117,6 +117,7 @@ function logout() {
 	sessionStorage.setItem('token', '');
 	request_share_session_storage();
 	checktoken();
+	window.location = 'devicemanager.html';
 	return false;
 }
 
