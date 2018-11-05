@@ -237,15 +237,15 @@ function execlogin(user,password){
 
 // In case it is not defined, we define the function here.
 if (!String.prototype.endsWith) {
-String.prototype.endsWith = function(searchString, position) {
-	var subjectString = this.toString();
-	if (typeof position !== 'number' || !isFinite(position) || Math.floor(position) !== position || position > subjectString.length) {
-		position = subjectString.length;
-	}
-	position -= searchString.length;
-	var lastIndex = subjectString.indexOf(searchString, position);
-	return lastIndex !== -1 && lastIndex === position;
-};
+	String.prototype.endsWith = function(searchString, position) {
+		var subjectString = this.toString();
+		if (typeof position !== 'number' || !isFinite(position) || Math.floor(position) !== position || position > subjectString.length) {
+			position = subjectString.length;
+		}
+		position -= searchString.length;
+		var lastIndex = subjectString.indexOf(searchString, position);
+		return lastIndex !== -1 && lastIndex === position;
+	};
 }
 
 
@@ -256,7 +256,7 @@ function jsontotable(myjson,count,first,level,lastwascoma,mtitle,filtered_fields
 // 	if(first==true){ html ="{"; }
 	var mainc=mtitle;
 	if(mtitle==true){
-		html += "<div ><table style='border:1px solid black'>\n";// style='width:100%'>";
+		html += "<div><table style='border:1px solid black'>\n";// style='width:100%'>";
 	}
 	var countseries=0;
 	myjson.forEach(function(val) {
@@ -295,24 +295,29 @@ function jsontotable(myjson,count,first,level,lastwascoma,mtitle,filtered_fields
 					count++;
 					lastwascoma=false;
 				}
-			}else if (getType(val[key]) == "array" ) {
+			}else if (getType(val[key]) == "array" || getType(val[key]) == "object" ) {
 // 					if (count != 1) html += ',<br>';
 // 					for (i = 0; i < level; i++) {
 // 						if (count != 1) html += '&emsp;';
 // 					}
 					if(mtitle==true){
-						html += "<tr><th><strong>\"" +  key + "\"</strong>: </th>\n";
+						if(count>1){
+							html += "</table></div></td><br>\n";
+							html += "<div ><table  style='border:1px solid black'>\n";// style='width:100%'>";
+						}
+						html += "<tr><th><strong>\"" + key + "\"</strong>: </th>\n";
+						
 						mtitle=false;
 					}else{
-						html += "<tr><td><strong>\"" +  key + "\"</strong>: </td>\n";
+						html += "<tr><td><strong>\"" + key + "\"</strong>: </td>\n";
 					}
 					count++;
 					lastwascoma=false;
 					html += "<td><div><table style='width:100%; border:0px solid black'>\n";//  style='width:100%'>";
-					html += jsontotable(  ([ val[key] ]), count, true, level+1 ,lastwascoma,false,filtered_fields);
+					html += jsontotable( ([ val[key] ]), count, true, level+1 ,lastwascoma,mtitle,filtered_fields);
 					html += "</table></div></td>\n";
-			}else if (getType(val[key]) == "object" ) {
-				html += jsontotable( ([ val[key] ]), count, false, level+1,lastwascoma,false,filtered_fields);
+// 			}else if (getType(val[key]) == "object" ) {
+// 				html += jsontotable( ([ val[key] ]), count, false, level+1,lastwascoma,mtitle,filtered_fields);
 			};
 		});
 		mtitle=true;
@@ -322,7 +327,7 @@ function jsontotable(myjson,count,first,level,lastwascoma,mtitle,filtered_fields
 	if(mainc==true)
 		html += "</table></div>\n";
 	return html;
-}
+}//jsontotable
  
 
 function jsontotable_only_device_names(myjson,count,first,level,lastwascoma,mtitle,fields_toshow){
@@ -385,10 +390,10 @@ function jsontotable_only_device_names(myjson,count,first,level,lastwascoma,mtit
 					count++;
 					lastwascoma=false;
 // 					html += "<td><div  ><table style='width:100%; border:0px solid black'>\n";//  style='width:100%'>";
-					html += jsontotable_only_device_names(  ([ val[key] ]), count, true, level+1 ,lastwascoma,true,fields_toshow);
+					html += jsontotable_only_device_names(  ([ val[key] ]), count, true, level+1 ,lastwascoma,mtitle,fields_toshow);
 // 					html += "</table></div></td>\n";
 			}else if (getType(val[key]) == "object" ) {
-				html += jsontotable_only_device_names( ([ val[key] ]), count, false, level+1,lastwascoma,true,fields_toshow);
+				html += jsontotable_only_device_names( ([ val[key] ]), count, false, level+1,lastwascoma,mtitle,fields_toshow);
 			};
 		});
 		mtitle=true;
