@@ -1228,7 +1228,7 @@ function register_mf_config(req, res, new_mf_config){
 	
 	var jsontext_obj=JSON.parse(jsontext);
 	jsontext_obj.generic.platform_id_length  = devicename.length;
-		console.log(JSON.stringify(jsontext_obj,null,2));
+// 		console.log(JSON.stringify(jsontext_obj,null,2));
 	
 	var jsontext = JSON.stringify(jsontext_obj);
 	register_mf_config_json(req, res, new_mf_config, jsontext);
