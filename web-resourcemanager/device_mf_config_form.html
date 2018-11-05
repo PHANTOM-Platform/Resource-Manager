@@ -15,7 +15,97 @@
 
 	<title>PHANTOM RESOURCE-MANAGER</title>
 	<link rel="stylesheet" type="text/css" href="phantom.css">
-	<script src="devicemanager.js"></script> 		
+	<script src="devicemanager.js"></script>
+
+<script>
+	function submitform(e, frm) {
+		if (document.getElementById('generic[platform_id]').value == '') {
+			alert('Missing field platform_id !!');
+		} else {
+
+	mquery={
+		"generic" : {
+			"platform_id" : document.getElementById('generic[platform_id]').value,
+			"bulk_size" : document.getElementById('generic[bulk_size]').value
+		},"plugins" : {
+			"mf_plugin_board_power" : document.getElementById('plugins[mf_plugin_board_power]').value,
+			"mf_plugin_cpu_perf" : document.getElementById('plugins[mf_plugin_cpu_perf]').value,
+			"mf_plugin_cpu_temperature" : document.getElementById('plugins[mf_plugin_cpu_temperature]').value,
+			"mf_plugin_linux_resources" : document.getElementById('plugins[mf_plugin_linux_resources]').value,
+			"mf_plugin_linux_sys_power" : document.getElementById('plugins[mf_plugin_linux_sys_power]').value,
+			"mf_plugin_nvml" : document.getElementById('plugins[mf_plugin_nvml]').value,
+			"mf_plugin_rapl_power" : document.getElementById('plugins[mf_plugin_rapl_power]').value,
+			"mf_plugin_xilinx_fpga" : document.getElementById('plugins[mf_plugin_xilinx_fpga]').value
+		}, "timings" : {
+			"default" : document.getElementById('timings[default]').value,
+			"update_configuration" : document.getElementById('timings[update_configuration]').value,
+			"mf_plugin_board_power" : document.getElementById('timings[mf_plugin_board_power]').value,
+			"mf_plugin_cpu_perf" : document.getElementById('timings[mf_plugin_cpu_perf]').value,
+			"mf_plugin_cpu_temperature" : document.getElementById('timings[mf_plugin_cpu_temperature]').value,
+			"mf_plugin_linux_resources" : document.getElementById('timings[mf_plugin_linux_resources]').value,
+			"mf_plugin_linux_sys_power" : document.getElementById('timings[mf_plugin_linux_sys_power]').value,
+			"mf_plugin_nvml" : document.getElementById('timings[mf_plugin_nvml]').value,
+			"mf_plugin_rapl_power" : document.getElementById('timings[mf_plugin_rapl_power]').value
+		}, "mf_plugin_board_power" : {
+			"acme_board_name" : document.getElementById('mf_plugin_board_power[acme_board_name]').value,
+			"device0_current" : document.getElementById('mf_plugin_board_power[device0_current]').value,
+			"device0_vshunt" : document.getElementById('mf_plugin_board_power[device0_vshunt]').value,
+			"device0_vbus" : document.getElementById('mf_plugin_board_power[device0_vbus]').value,
+			"device0_power" : document.getElementById('mf_plugin_board_power[device0_power]').value
+		}, "mf_plugin_cpu_perf" : {
+			"max_cpu_cores" : document.getElementById('mf_plugin_cpu_perf[max_cpu_cores]').value,
+			"mflips" : document.getElementById('mf_plugin_cpu_perf[mflips]').value,
+			"mflops" : document.getElementById('mf_plugin_cpu_perf[mflops]').value,
+			"mips" : document.getElementById('mf_plugin_cpu_perf[mips]').value
+		}, "mf_plugin_cpu_temperature" : {
+			"cpu0_core0" : document.getElementById('mf_plugin_cpu_temperature[cpu0_core0]').value,
+			"cpu0_core1" : document.getElementById('mf_plugin_cpu_temperature[cpu0_core1]').value
+		}, "mf_plugin_linux_resources" : {
+			"cpu_usage_rate" : document.getElementById('mf_plugin_linux_resources[cpu_usage_rate]').value,
+			"ram_usage_rate" : document.getElementById('mf_plugin_linux_resources[ram_usage_rate]').value,
+			"swap_usage_rate" : document.getElementById('mf_plugin_linux_resources[swap_usage_rate]').value,
+			"net_throughput" : document.getElementById('mf_plugin_linux_resources[net_throughput]').value,
+			"io_throughput" : document.getElementById('mf_plugin_linux_resources[io_throughput]').value
+		}, "mf_plugin_linux_sys_power" : {
+			"estimated_cpu_power" : document.getElementById('mf_plugin_linux_sys_power[estimated_cpu_power]').value,
+			"estimated_wifi_power" : document.getElementById('mf_plugin_linux_sys_power[estimated_wifi_power]').value,
+			"estimated_memory_power" : document.getElementById('mf_plugin_linux_sys_power[estimated_memory_power]').value,
+			"estimated_disk_power" : document.getElementById('mf_plugin_linux_sys_power[estimated_disk_power]').value,
+			"estimated_total_power" : document.getElementById('mf_plugin_linux_sys_power[estimated_total_power]').value
+		}, "mf_plugin_nvml" : {
+			"gpu_usage_rate" : document.getElementById('mf_plugin_nvml[gpu_usage_rate]').value,
+			"mem_usage_rate" : document.getElementById('mf_plugin_nvml[mem_usage_rate]').value,
+			"mem_allocated" : document.getElementById('mf_plugin_nvml[mem_allocated]').value,
+			"pcie_snd_throughput" : document.getElementById('mf_plugin_nvml[pcie_snd_throughput]').value,
+			"pcie_rcv_throughput" : document.getElementById('mf_plugin_nvml[pcie_rcv_throughput]').value,
+			"temperature" : document.getElementById('mf_plugin_nvml[temperature]').value,
+			"power" : document.getElementById('mf_plugin_nvml[power]').value
+		}, "mf_plugin_rapl_power" : {
+			"total_power" : document.getElementById('mf_plugin_rapl_power[total_power]').value,
+			"dram_power" : document.getElementById('mf_plugin_rapl_power[dram_power]').value
+		}
+	};
+	// console.log(JSON.stringify(mquery,null,2));
+			var xhr = new XMLHttpRequest();
+			xhr.open('POST', 'myform_device_mf_config_update', true);
+			xhr.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
+			xhr.onreadystatechange = function () {
+				if (xhr.readyState == 4) {
+					var r = "";
+					if (xhr.status == 200 || xhr.status == 0) {
+						r = "Success!<br />";
+					} else {
+						r = "Error " + xhr.status + " occurred uploading form.<br />";
+					}
+					document.getElementById("demoreplaceb").innerHTML = r ;
+					document.getElementById("debug_phantom").style.display = "block";
+					document.getElementById("phantom_form").style.display = "none";
+				}
+			};
+			xhr.send(JSON.stringify(mquery));	
+		}
+	}
+</script>	
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <style> 
 /* Create equal columns that floats next to each other */
@@ -36,7 +126,7 @@
 .column {
 	width: 100%;
 }
-} 
+}
 </style>
 </head>
 <body>
@@ -44,199 +134,112 @@
 <body onload="start_page_new()">
 	<div id="menu_phantom"></div>
 
-	<h1><b>Register of a Monitoring Configuration for a single device</b> </h1>
+	<div id="menu_login" style="display:none"></div>
 
-<hr><br>
-<h2><b> Online formular: </b></h2>
+	<div id="phantom_operation">
+			<h1><b>Register of a Monitoring Configuration for a single device</b> </h1>
 
-<script>
+			<hr><br>
+			<h2><b> Online formular: </b></h2>
 
-function submitform(e, frm) {
-	if (document.getElementById('generic[platform_id]').value == '') {
-		alert('Missing field platform_id !!');
-	} else {
+			<div id="phantom_form" style="display:block">
+				<form name="frm" id="frm" > 
+				<div class="row">
+				<div class="column" style="background-color:#8cacff;">
+				<!-- 	"registered_id" : "AWRbSGcjwHjCws13Gi1h", -->
+				<b>"generic"</b> : [ {<br>
+				&emsp;"platform_id" : <input type="text" id="generic[platform_id]" name="generic[platform_id]" value="node01">, <br>
+				&emsp;"bulk_size" : <input type="text" name="generic[bulk_size]" id="generic[bulk_size]" value="8"><br>
+				} ],<br>
+					<b>"plugins" </b>: [ {<br>
+						&emsp;"mf_plugin_board_power" : <input type="radio" id="plugins[mf_plugin_board_power]" name="plugins[mf_plugin_board_power]" value="on" checked> on <input type="radio" name="plugins[mf_plugin_board_power]" value="off"> off, <br>
+						&emsp;"mf_plugin_cpu_perf" : <input type="radio" name="plugins[mf_plugin_cpu_perf]" id="plugins[mf_plugin_cpu_perf]" value="on" checked> on <input type="radio" name="plugins[mf_plugin_cpu_perf]" value="off"> off, <br>
+						&emsp;"mf_plugin_cpu_temperature" : <input type="radio" name="plugins[mf_plugin_cpu_temperature]" id="plugins[mf_plugin_cpu_temperature]" value="on" checked> on <input type="radio" name="plugins[mf_plugin_cpu_temperature]" value="off"> off, <br>
+						&emsp;"mf_plugin_linux_resources" : <input type="radio" name="plugins[mf_plugin_linux_resources]" id="plugins[mf_plugin_linux_resources]" value="on" checked> on <input type="radio" name="plugins[mf_plugin_linux_resources]" value="off"> off, <br>
+						&emsp;"mf_plugin_linux_sys_power" : <input type="radio" name="plugins[mf_plugin_linux_sys_power]" id="plugins[mf_plugin_linux_sys_power]" value="on" checked> on <input type="radio" name="plugins[mf_plugin_linux_sys_power]" value="off"> off, <br>
+						&emsp;"mf_plugin_nvml" : <input type="radio" name="plugins[mf_plugin_nvml]" id="plugins[mf_plugin_nvml]" value="on" checked> on <input type="radio" name="plugins[mf_plugin_nvml]" value="off"> off, <br>
+						&emsp;"mf_plugin_rapl_power" : <input type="radio" name="plugins[mf_plugin_rapl_power]" id="plugins[mf_plugin_rapl_power]" value="on" checked> on <input type="radio" name="plugins[mf_plugin_rapl_power]" value="off"> off ,<br>
+						&emsp;"mf_plugin_xilinx_fpga" : <input type="radio" name="plugins[mf_plugin_xilinx_fpga]" id="plugins[mf_plugin_xilinx_fpga]" value="on" checked> on <input type="radio" name="plugins[mf_plugin_xilinx_fpga]" value="off"> off <br>
+					} ],<br>	
+					<b>	"timings"</b> : [ {<br>
+						&emsp;"default" : <input type="text" name="timings[default]" id="timings[default]" value="1000000000ns">, <br>
+						&emsp;"update_configuration" : <input type="text" name="timings[update_configuration]" id="timings[update_configuration]" value="360s">, <br>
+						&emsp;"mf_plugin_cpu_perf" : <input type="text" name="timings[mf_plugin_board_power]" id="timings[mf_plugin_board_power]" value="1000000000ns">, <br>
+						&emsp;"mf_plugin_cpu_perf" : <input type="text" name="timings[mf_plugin_cpu_perf]" id="timings[mf_plugin_cpu_perf]" value="1000000000ns">, <br>
+						&emsp;"mf_plugin_cpu_temperature" : <input type="text" name="timings[mf_plugin_cpu_temperature]" id="timings[mf_plugin_cpu_temperature]" value="1000000000ns">, <br>
+						&emsp;"mf_plugin_linux_resources" : <input type="text" name="timings[mf_plugin_linux_resources]" id="timings[mf_plugin_linux_resources]" value="2000000000ns">, <br>
+						&emsp;"mf_plugin_linux_sys_power" : <input type="text" name="timings[mf_plugin_linux_sys_power]" id="timings[mf_plugin_linux_sys_power]" value="2000000000ns">, <br>
+						&emsp;"mf_plugin_nvml" : <input type="text" name="timings[mf_plugin_nvml]" id="timings[mf_plugin_nvml]" value="1000000000ns">, <br>
+						&emsp;"mf_plugin_rapl_power" : <input type="text" name="timings[mf_plugin_rapl_power]" id="timings[mf_plugin_rapl_power]" value="1000000000ns"> <br>
+					} ],<br>
+				</div>
+				<div class="column" style="background-color:#6f98ff;">	
+					<br>
+					<b>"mf_plugin_board_power"</b> : [ {<br>
+						&emsp;"acme_board_name" : <input type="text" name="mf_plugin_board_power[acme_board_name]" id="mf_plugin_board_power[acme_board_name]" value="power-jetson.local">, <br>
+						&emsp;"device0:current" : <input type="radio" name="mf_plugin_board_power[device0_current]" id="mf_plugin_board_power[device0_current]" value="on" checked> on <input type="radio" name="mf_plugin_board_power[device0_current]" value="off"> off, <br>
+						&emsp;"device0:vshunt" : <input type="radio" name="mf_plugin_board_power[device0_vshunt]" id="mf_plugin_board_power[device0_vshunt]" value="on" checked> on <input type="radio" name="mf_plugin_board_power[device0_vshunt]" value="off"> off, <br>
+						&emsp;"device0:vbus" : <input type="radio" name="mf_plugin_board_power[device0_vbus]" id="mf_plugin_board_power[device0_vbus]" value="on" checked> on <input type="radio" name="mf_plugin_board_power[device0_vbus]" value="off"> off, <br>
+						&emsp;"device0:power" : <input type="radio" name="mf_plugin_board_power[device0_power]" id="mf_plugin_board_power[device0_power]" value="on" checked> on <input type="radio" name="mf_plugin_board_power[device0_power]" value="off"> off <br>
+					} ],<br>
+					
+					<b>"mf_plugin_cpu_perf"</b> : [ {<br>
+						&emsp;"max_cpu_cores" : <input type="text" name="mf_plugin_cpu_perf[max_cpu_cores]" id="mf_plugin_cpu_perf[max_cpu_cores]" value="4">, <br>
+						&emsp;"mflips" : <input type="radio" name="mf_plugin_cpu_perf[mflips]" id="mf_plugin_cpu_perf[mflips]" value="on" checked> on <input type="radio" name="mf_plugin_cpu_perf[mflips]" value="off"> off, <br>
+						&emsp;"mflops" : <input type="radio" name="mf_plugin_cpu_perf[mflops]" id="mf_plugin_cpu_perf[mflops]" value="on" checked> on <input type="radio" name="mf_plugin_cpu_perf[mflops]" value="off"> off, <br>
+						&emsp;"mips" : <input type="radio" name="mf_plugin_cpu_perf[mips]" id="mf_plugin_cpu_perf[mips]" value="on" checked> on <input type="radio" name="mf_plugin_cpu_perf[mips]" value="off"> off <br>
+					} ],<br>
 
-mquery={
-	"generic" : {
-		"platform_id" : document.getElementById('generic[platform_id]').value,
-		"bulk_size" : document.getElementById('generic[bulk_size]').value
-	},"plugins" : {
-		"mf_plugin_board_power" : document.getElementById('plugins[mf_plugin_board_power]').value,
-		"mf_plugin_cpu_perf" : document.getElementById('plugins[mf_plugin_cpu_perf]').value,
-		"mf_plugin_cpu_temperature" : document.getElementById('plugins[mf_plugin_cpu_temperature]').value,
-		"mf_plugin_linux_resources" : document.getElementById('plugins[mf_plugin_linux_resources]').value,
-		"mf_plugin_linux_sys_power" : document.getElementById('plugins[mf_plugin_linux_sys_power]').value,
-		"mf_plugin_nvml" : document.getElementById('plugins[mf_plugin_nvml]').value,
-		"mf_plugin_rapl_power" : document.getElementById('plugins[mf_plugin_rapl_power]').value,
-		"mf_plugin_xilinx_fpga" : document.getElementById('plugins[mf_plugin_xilinx_fpga]').value
-	}, "timings" : {
-		"default" : document.getElementById('timings[default]').value,
-		"update_configuration" : document.getElementById('timings[update_configuration]').value,
-		"mf_plugin_board_power" : document.getElementById('timings[mf_plugin_board_power]').value,
-		"mf_plugin_cpu_perf" : document.getElementById('timings[mf_plugin_cpu_perf]').value,
-		"mf_plugin_cpu_temperature" : document.getElementById('timings[mf_plugin_cpu_temperature]').value,
-		"mf_plugin_linux_resources" : document.getElementById('timings[mf_plugin_linux_resources]').value,
-		"mf_plugin_linux_sys_power" : document.getElementById('timings[mf_plugin_linux_sys_power]').value,
-		"mf_plugin_nvml" : document.getElementById('timings[mf_plugin_nvml]').value,
-		"mf_plugin_rapl_power" : document.getElementById('timings[mf_plugin_rapl_power]').value
-	}, "mf_plugin_board_power" : {
-		"acme_board_name" : document.getElementById('mf_plugin_board_power[acme_board_name]').value,
-		"device0_current" : document.getElementById('mf_plugin_board_power[device0_current]').value,
-		"device0_vshunt" : document.getElementById('mf_plugin_board_power[device0_vshunt]').value,
-		"device0_vbus" : document.getElementById('mf_plugin_board_power[device0_vbus]').value,
-		"device0_power" : document.getElementById('mf_plugin_board_power[device0_power]').value
-	}, "mf_plugin_cpu_perf" : {
-		"max_cpu_cores" : document.getElementById('mf_plugin_cpu_perf[max_cpu_cores]').value,
-		"mflips" : document.getElementById('mf_plugin_cpu_perf[mflips]').value,
-		"mflops" : document.getElementById('mf_plugin_cpu_perf[mflops]').value,
-		"mips" : document.getElementById('mf_plugin_cpu_perf[mips]').value
-	}, "mf_plugin_cpu_temperature" : {
-		"cpu0_core0" : document.getElementById('mf_plugin_cpu_temperature[cpu0_core0]').value,
-		"cpu0_core1" : document.getElementById('mf_plugin_cpu_temperature[cpu0_core1]').value
-	}, "mf_plugin_linux_resources" : {
-		"cpu_usage_rate" : document.getElementById('mf_plugin_linux_resources[cpu_usage_rate]').value,
-		"ram_usage_rate" : document.getElementById('mf_plugin_linux_resources[ram_usage_rate]').value,
-		"swap_usage_rate" : document.getElementById('mf_plugin_linux_resources[swap_usage_rate]').value,
-		"net_throughput" : document.getElementById('mf_plugin_linux_resources[net_throughput]').value,
-		"io_throughput" : document.getElementById('mf_plugin_linux_resources[io_throughput]').value
-	}, "mf_plugin_linux_sys_power" : {
-		"estimated_cpu_power" : document.getElementById('mf_plugin_linux_sys_power[estimated_cpu_power]').value,
-		"estimated_wifi_power" : document.getElementById('mf_plugin_linux_sys_power[estimated_wifi_power]').value,
-		"estimated_memory_power" : document.getElementById('mf_plugin_linux_sys_power[estimated_memory_power]').value,
-		"estimated_disk_power" : document.getElementById('mf_plugin_linux_sys_power[estimated_disk_power]').value,
-		"estimated_total_power" : document.getElementById('mf_plugin_linux_sys_power[estimated_total_power]').value
-	}, "mf_plugin_nvml" : {
-		"gpu_usage_rate" : document.getElementById('mf_plugin_nvml[gpu_usage_rate]').value,
-		"mem_usage_rate" : document.getElementById('mf_plugin_nvml[mem_usage_rate]').value,
-		"mem_allocated" : document.getElementById('mf_plugin_nvml[mem_allocated]').value,
-		"pcie_snd_throughput" : document.getElementById('mf_plugin_nvml[pcie_snd_throughput]').value,
-		"pcie_rcv_throughput" : document.getElementById('mf_plugin_nvml[pcie_rcv_throughput]').value,
-		"temperature" : document.getElementById('mf_plugin_nvml[temperature]').value,
-		"power" : document.getElementById('mf_plugin_nvml[power]').value
-	}, "mf_plugin_rapl_power" : {
-		"total_power" : document.getElementById('mf_plugin_rapl_power[total_power]').value,
-		"dram_power" : document.getElementById('mf_plugin_rapl_power[dram_power]').value
-	}
-};
-// console.log(JSON.stringify(mquery,null,2));
-		var xhr = new XMLHttpRequest();
-		xhr.open('POST', 'myform_device_mf_config_update', true);
-		xhr.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
-		xhr.onreadystatechange = function () {
-			if (xhr.readyState == 4) {
-				var r = "";
-				if (xhr.status == 200 || xhr.status == 0) {
-					r = "Success!<br />";
-				} else {
-					r = "Error " + xhr.status + " occurred uploading form.<br />";
-				}
-				document.getElementById("demoreplaceb").innerHTML = r ;
-				document.getElementById("debug_phantom").style.display = "block";
-				document.getElementById("phantom_form").style.display = "none";
-			}
-		};
-		xhr.send(JSON.stringify(mquery));	
-	}
-}
-</script>
+					<b> "mf_plugin_cpu_temperature"</b> : [ {<br>
+						&emsp;"cpu0:core0" : <input type="radio" name="mf_plugin_cpu_temperature[cpu0_core0]" id="mf_plugin_cpu_temperature[cpu0_core0]" value="on" checked> on <input type="radio" name="mf_plugin_cpu_temperature[cpu0_core0]" value="off"> off, <br>
+						&emsp;"cpu0:core1" : <input type="radio" name="mf_plugin_cpu_temperature[cpu0_core1]" id="mf_plugin_cpu_temperature[cpu0_core1]" value="on" checked> on <input type="radio" name="mf_plugin_cpu_temperature[cpu0_core1]" value="off"> off <br>
+					} ],<br>
+					<b>"mf_plugin_linux_resources"</b> : [ {<br>
+						&emsp;"cpu_usage_rate" : <input type="radio" name="mf_plugin_linux_resources[cpu_usage_rate]" id="mf_plugin_linux_resources[cpu_usage_rate]" value="on" checked> on <input type="radio" name="mf_plugin_linux_resources[cpu_usage_rate]" value="off"> off, <br>
+						&emsp;"ram_usage_rate" : <input type="radio" name="mf_plugin_linux_resources[ram_usage_rate]" id="mf_plugin_linux_resources[ram_usage_rate]" value="on" checked> on <input type="radio" name="mf_plugin_linux_resources[ram_usage_rate]" value="off"> off, <br>
+						&emsp;"swap_usage_rate" : <input type="radio" name="mf_plugin_linux_resources[swap_usage_rate]" id="mf_plugin_linux_resources[swap_usage_rate]" value="on" checked> on <input type="radio" name="mf_plugin_linux_resources[swap_usage_rate]" value="off"> off, <br>
+						&emsp;"net_throughput" : <input type="radio" name="mf_plugin_linux_resources[net_throughput]" id="mf_plugin_linux_resources[net_throughput]" value="on" checked> on <input type="radio" name="mf_plugin_linux_resources[net_throughput]" value="off"> off, <br>
+						&emsp;"io_throughput" : <input type="radio" name="mf_plugin_linux_resources[io_throughput]" id="mf_plugin_linux_resources[io_throughput]" value="on" checked> on <input type="radio" name="mf_plugin_linux_resources[io_throughput]" value="off"> off <br>
+					} ],<br>
+				</div>
+				<div class="column" style="background-color:#8cacff;">	
+					<br>
+					<b>"mf_plugin_linux_sys_power"</b> : [ {<br>
+						&emsp;"estimated_cpu_power" : <input type="radio" name="mf_plugin_linux_sys_power[estimated_cpu_power]" id="mf_plugin_linux_sys_power[estimated_cpu_power]" value="on" checked> on <input type="radio" name="mf_plugin_linux_sys_power[estimated_cpu_power]" value="off"> off, <br>
+						&emsp;"estimated_wifi_power" : <input type="radio" name="mf_plugin_linux_sys_power[estimated_wifi_power]" id="mf_plugin_linux_sys_power[estimated_wifi_power]" value="on" checked> on <input type="radio" name="mf_plugin_linux_sys_power[estimated_wifi_power]" value="off"> off, <br>
+						&emsp;"estimated_memory_power" : <input type="radio" name="mf_plugin_linux_sys_power[estimated_memory_power]" id="mf_plugin_linux_sys_power[estimated_memory_power]" value="on" checked> on <input type="radio" name="mf_plugin_linux_sys_power[estimated_memory_power]" value="off"> off, <br>
+						&emsp;"estimated_disk_power" : <input type="radio" name="mf_plugin_linux_sys_power[estimated_disk_power]" id="mf_plugin_linux_sys_power[estimated_disk_power]" value="on" checked> on <input type="radio" name="mf_plugin_linux_sys_power[estimated_disk_power]" value="off"> off, <br>
+						&emsp;"estimated_total_power" : <input type="radio" name="mf_plugin_linux_sys_power[estimated_total_power]" id="mf_plugin_linux_sys_power[estimated_total_power]" value="on" checked> on <input type="radio" name="mf_plugin_linux_sys_power[estimated_total_power]" value="off"> off <br>
+					} ],<br>
+					<b>"mf_plugin_nvml"</b> : [ {<br>
+						&emsp;"gpu_usage_rate" : <input type="radio" name="mf_plugin_nvml[gpu_usage_rate]" id="mf_plugin_nvml[gpu_usage_rate]" value="on" checked> on <input type="radio" name="mf_plugin_nvml[gpu_usage_rate]" value="off"> off, <br>
+						&emsp;"mem_usage_rate" : <input type="radio" name="mf_plugin_nvml[mem_usage_rate]" id="mf_plugin_nvml[mem_usage_rate]" value="on" checked> on <input type="radio" name="mf_plugin_nvml[mem_usage_rate]" value="off"> off, <br>
+						&emsp;"mem_allocated" : <input type="radio" name="mf_plugin_nvml[mem_allocated]" id="mf_plugin_nvml[mem_allocated]" value="on" checked> on <input type="radio" name="mf_plugin_nvml[mem_allocated]" value="off"> off, <br>
+						&emsp;"pcie_snd_throughput" : <input type="radio" name="mf_plugin_nvml[pcie_snd_throughput]" id="mf_plugin_nvml[pcie_snd_throughput]" value="on" checked> on <input type="radio" name="mf_plugin_nvml[pcie_snd_throughput]" value="off"> off, <br>
+						&emsp;"pcie_rcv_throughput" : <input type="radio" name="mf_plugin_nvml[pcie_rcv_throughput]" id="mf_plugin_nvml[pcie_rcv_throughput]" value="on" checked> on <input type="radio" name="mf_plugin_nvml[pcie_rcv_throughput]" value="off"> off, <br>
+						&emsp;"temperature" : <input type="radio" name="mf_plugin_nvml[temperature]" id="mf_plugin_nvml[temperature]" value="on" checked> on <input type="radio" name="mf_plugin_nvml[temperature]" value="off"> off, <br>
+						&emsp;"power" : <input type="radio" name="mf_plugin_nvml[power]" id="mf_plugin_nvml[power]" value="on" checked> on <input type="radio" name="mf_plugin_nvml[power]" value="off"> off <br>
+					} ],<br>
+					<b>"mf_plugin_rapl_power"</b> : [ {<br>
+						&emsp;"total_power" : <input type="radio" name="mf_plugin_rapl_power[total_power]" id="mf_plugin_rapl_power[total_power]" value="on" checked> on <input type="radio" name="mf_plugin_rapl_power[total_power]" value="off"> off, <br>
+						&emsp;"dram_power" : <input type="radio" name="mf_plugin_rapl_power[dram_power]" id="mf_plugin_rapl_power[dram_power]" value="on" checked> on <input type="radio" name="mf_plugin_rapl_power[dram_power]" value="off"> off <br>
+					} ]<br>
+				</div>
+				</div>	
+			<!-- <input type="submit" value="Submit" onclick="submitform(event, this)"> -->
+			</form>
+				<center>
+					<button onclick="submitform(event, this)">Submit </button>
+				</center>
+			</div>
+	</div>
 
-<div id="phantom_form" style="display:block">
-<form name="frm" id="frm" > 
-<div class="row">
-<div class="column" style="background-color:#8cacff;">
-<!-- 	"registered_id" : "AWRbSGcjwHjCws13Gi1h", -->
-<b>"generic"</b> : [ {<br>
-&emsp;"platform_id" : <input type="text" id="generic[platform_id]" name="generic[platform_id]" value="node01">, <br>
-&emsp;"bulk_size" : <input type="text" name="generic[bulk_size]" id="generic[bulk_size]" value="8"><br>
-} ],<br>
-	<b>"plugins" </b>: [ {<br>
-		&emsp;"mf_plugin_board_power" : <input type="radio" id="plugins[mf_plugin_board_power]" name="plugins[mf_plugin_board_power]" value="on" checked> on <input type="radio" name="plugins[mf_plugin_board_power]" value="off"> off, <br>
-		&emsp;"mf_plugin_cpu_perf" : <input type="radio" name="plugins[mf_plugin_cpu_perf]" id="plugins[mf_plugin_cpu_perf]" value="on" checked> on <input type="radio" name="plugins[mf_plugin_cpu_perf]" value="off"> off, <br>
-		&emsp;"mf_plugin_cpu_temperature" : <input type="radio" name="plugins[mf_plugin_cpu_temperature]" id="plugins[mf_plugin_cpu_temperature]" value="on" checked> on <input type="radio" name="plugins[mf_plugin_cpu_temperature]" value="off"> off, <br>
-		&emsp;"mf_plugin_linux_resources" : <input type="radio" name="plugins[mf_plugin_linux_resources]" id="plugins[mf_plugin_linux_resources]" value="on" checked> on <input type="radio" name="plugins[mf_plugin_linux_resources]" value="off"> off, <br>
-		&emsp;"mf_plugin_linux_sys_power" : <input type="radio" name="plugins[mf_plugin_linux_sys_power]" id="plugins[mf_plugin_linux_sys_power]" value="on" checked> on <input type="radio" name="plugins[mf_plugin_linux_sys_power]" value="off"> off, <br>
-		&emsp;"mf_plugin_nvml" : <input type="radio" name="plugins[mf_plugin_nvml]" id="plugins[mf_plugin_nvml]" value="on" checked> on <input type="radio" name="plugins[mf_plugin_nvml]" value="off"> off, <br>
-		&emsp;"mf_plugin_rapl_power" : <input type="radio" name="plugins[mf_plugin_rapl_power]" id="plugins[mf_plugin_rapl_power]" value="on" checked> on <input type="radio" name="plugins[mf_plugin_rapl_power]" value="off"> off ,<br>
-		&emsp;"mf_plugin_xilinx_fpga" : <input type="radio" name="plugins[mf_plugin_xilinx_fpga]" id="plugins[mf_plugin_xilinx_fpga]" value="on" checked> on <input type="radio" name="plugins[mf_plugin_xilinx_fpga]" value="off"> off <br>
-	} ],<br>	
-	<b>	"timings"</b> : [ {<br>
-		&emsp;"default" : <input type="text" name="timings[default]" id="timings[default]" value="1000000000ns">, <br>
-		&emsp;"update_configuration" : <input type="text" name="timings[update_configuration]" id="timings[update_configuration]" value="360s">, <br>
-		&emsp;"mf_plugin_cpu_perf" : <input type="text" name="timings[mf_plugin_board_power]" id="timings[mf_plugin_board_power]" value="1000000000ns">, <br>
-		&emsp;"mf_plugin_cpu_perf" : <input type="text" name="timings[mf_plugin_cpu_perf]" id="timings[mf_plugin_cpu_perf]" value="1000000000ns">, <br>
-		&emsp;"mf_plugin_cpu_temperature" : <input type="text" name="timings[mf_plugin_cpu_temperature]" id="timings[mf_plugin_cpu_temperature]" value="1000000000ns">, <br>
-		&emsp;"mf_plugin_linux_resources" : <input type="text" name="timings[mf_plugin_linux_resources]" id="timings[mf_plugin_linux_resources]" value="2000000000ns">, <br>
-		&emsp;"mf_plugin_linux_sys_power" : <input type="text" name="timings[mf_plugin_linux_sys_power]" id="timings[mf_plugin_linux_sys_power]" value="2000000000ns">, <br>
-		&emsp;"mf_plugin_nvml" : <input type="text" name="timings[mf_plugin_nvml]" id="timings[mf_plugin_nvml]" value="1000000000ns">, <br>
-		&emsp;"mf_plugin_rapl_power" : <input type="text" name="timings[mf_plugin_rapl_power]" id="timings[mf_plugin_rapl_power]" value="1000000000ns"> <br>
-	} ],<br>
-</div>
-<div class="column" style="background-color:#6f98ff;">	
-	<br>
-	<b>"mf_plugin_board_power"</b> : [ {<br>
-		&emsp;"acme_board_name" : <input type="text" name="mf_plugin_board_power[acme_board_name]" id="mf_plugin_board_power[acme_board_name]" value="power-jetson.local">, <br>
-		&emsp;"device0:current" : <input type="radio" name="mf_plugin_board_power[device0_current]" id="mf_plugin_board_power[device0_current]" value="on" checked> on <input type="radio" name="mf_plugin_board_power[device0_current]" value="off"> off, <br>
-		&emsp;"device0:vshunt" : <input type="radio" name="mf_plugin_board_power[device0_vshunt]" id="mf_plugin_board_power[device0_vshunt]" value="on" checked> on <input type="radio" name="mf_plugin_board_power[device0_vshunt]" value="off"> off, <br>
-		&emsp;"device0:vbus" : <input type="radio" name="mf_plugin_board_power[device0_vbus]" id="mf_plugin_board_power[device0_vbus]" value="on" checked> on <input type="radio" name="mf_plugin_board_power[device0_vbus]" value="off"> off, <br>
-		&emsp;"device0:power" : <input type="radio" name="mf_plugin_board_power[device0_power]" id="mf_plugin_board_power[device0_power]" value="on" checked> on <input type="radio" name="mf_plugin_board_power[device0_power]" value="off"> off <br>
-	} ],<br>
-	
-	<b>"mf_plugin_cpu_perf"</b> : [ {<br>
-		&emsp;"max_cpu_cores" : <input type="text" name="mf_plugin_cpu_perf[max_cpu_cores]" id="mf_plugin_cpu_perf[max_cpu_cores]" value="4">, <br>
-		&emsp;"mflips" : <input type="radio" name="mf_plugin_cpu_perf[mflips]" id="mf_plugin_cpu_perf[mflips]" value="on" checked> on <input type="radio" name="mf_plugin_cpu_perf[mflips]" value="off"> off, <br>
-		&emsp;"mflops" : <input type="radio" name="mf_plugin_cpu_perf[mflops]" id="mf_plugin_cpu_perf[mflops]" value="on" checked> on <input type="radio" name="mf_plugin_cpu_perf[mflops]" value="off"> off, <br>
-		&emsp;"mips" : <input type="radio" name="mf_plugin_cpu_perf[mips]" id="mf_plugin_cpu_perf[mips]" value="on" checked> on <input type="radio" name="mf_plugin_cpu_perf[mips]" value="off"> off <br>
-	} ],<br>
+	<div id="debug_phantom" style="display:none">
+		<hr><p id="demoreplaceb"></p>
+	</div>
 
-	<b> "mf_plugin_cpu_temperature"</b> : [ {<br>
-		&emsp;"cpu0:core0" : <input type="radio" name="mf_plugin_cpu_temperature[cpu0_core0]" id="mf_plugin_cpu_temperature[cpu0_core0]" value="on" checked> on <input type="radio" name="mf_plugin_cpu_temperature[cpu0_core0]" value="off"> off, <br>
-		&emsp;"cpu0:core1" : <input type="radio" name="mf_plugin_cpu_temperature[cpu0_core1]" id="mf_plugin_cpu_temperature[cpu0_core1]" value="on" checked> on <input type="radio" name="mf_plugin_cpu_temperature[cpu0_core1]" value="off"> off <br>
-	} ],<br>
-	<b>"mf_plugin_linux_resources"</b> : [ {<br>
-		&emsp;"cpu_usage_rate" : <input type="radio" name="mf_plugin_linux_resources[cpu_usage_rate]" id="mf_plugin_linux_resources[cpu_usage_rate]" value="on" checked> on <input type="radio" name="mf_plugin_linux_resources[cpu_usage_rate]" value="off"> off, <br>
-		&emsp;"ram_usage_rate" : <input type="radio" name="mf_plugin_linux_resources[ram_usage_rate]" id="mf_plugin_linux_resources[ram_usage_rate]" value="on" checked> on <input type="radio" name="mf_plugin_linux_resources[ram_usage_rate]" value="off"> off, <br>
-		&emsp;"swap_usage_rate" : <input type="radio" name="mf_plugin_linux_resources[swap_usage_rate]" id="mf_plugin_linux_resources[swap_usage_rate]" value="on" checked> on <input type="radio" name="mf_plugin_linux_resources[swap_usage_rate]" value="off"> off, <br>
-		&emsp;"net_throughput" : <input type="radio" name="mf_plugin_linux_resources[net_throughput]" id="mf_plugin_linux_resources[net_throughput]" value="on" checked> on <input type="radio" name="mf_plugin_linux_resources[net_throughput]" value="off"> off, <br>
-		&emsp;"io_throughput" : <input type="radio" name="mf_plugin_linux_resources[io_throughput]" id="mf_plugin_linux_resources[io_throughput]" value="on" checked> on <input type="radio" name="mf_plugin_linux_resources[io_throughput]" value="off"> off <br>
-	} ],<br>
-</div>
-<div class="column" style="background-color:#8cacff;">	
-	<br>
-	<b>"mf_plugin_linux_sys_power"</b> : [ {<br>
-		&emsp;"estimated_cpu_power" : <input type="radio" name="mf_plugin_linux_sys_power[estimated_cpu_power]" id="mf_plugin_linux_sys_power[estimated_cpu_power]" value="on" checked> on <input type="radio" name="mf_plugin_linux_sys_power[estimated_cpu_power]" value="off"> off, <br>
-		&emsp;"estimated_wifi_power" : <input type="radio" name="mf_plugin_linux_sys_power[estimated_wifi_power]" id="mf_plugin_linux_sys_power[estimated_wifi_power]" value="on" checked> on <input type="radio" name="mf_plugin_linux_sys_power[estimated_wifi_power]" value="off"> off, <br>
-		&emsp;"estimated_memory_power" : <input type="radio" name="mf_plugin_linux_sys_power[estimated_memory_power]" id="mf_plugin_linux_sys_power[estimated_memory_power]" value="on" checked> on <input type="radio" name="mf_plugin_linux_sys_power[estimated_memory_power]" value="off"> off, <br>
-		&emsp;"estimated_disk_power" : <input type="radio" name="mf_plugin_linux_sys_power[estimated_disk_power]" id="mf_plugin_linux_sys_power[estimated_disk_power]" value="on" checked> on <input type="radio" name="mf_plugin_linux_sys_power[estimated_disk_power]" value="off"> off, <br>
-		&emsp;"estimated_total_power" : <input type="radio" name="mf_plugin_linux_sys_power[estimated_total_power]" id="mf_plugin_linux_sys_power[estimated_total_power]" value="on" checked> on <input type="radio" name="mf_plugin_linux_sys_power[estimated_total_power]" value="off"> off <br>
-	} ],<br>
-	<b>"mf_plugin_nvml"</b> : [ {<br>
-		&emsp;"gpu_usage_rate" : <input type="radio" name="mf_plugin_nvml[gpu_usage_rate]" id="mf_plugin_nvml[gpu_usage_rate]" value="on" checked> on <input type="radio" name="mf_plugin_nvml[gpu_usage_rate]" value="off"> off, <br>
-		&emsp;"mem_usage_rate" : <input type="radio" name="mf_plugin_nvml[mem_usage_rate]" id="mf_plugin_nvml[mem_usage_rate]" value="on" checked> on <input type="radio" name="mf_plugin_nvml[mem_usage_rate]" value="off"> off, <br>
-		&emsp;"mem_allocated" : <input type="radio" name="mf_plugin_nvml[mem_allocated]" id="mf_plugin_nvml[mem_allocated]" value="on" checked> on <input type="radio" name="mf_plugin_nvml[mem_allocated]" value="off"> off, <br>
-		&emsp;"pcie_snd_throughput" : <input type="radio" name="mf_plugin_nvml[pcie_snd_throughput]" id="mf_plugin_nvml[pcie_snd_throughput]" value="on" checked> on <input type="radio" name="mf_plugin_nvml[pcie_snd_throughput]" value="off"> off, <br>
-		&emsp;"pcie_rcv_throughput" : <input type="radio" name="mf_plugin_nvml[pcie_rcv_throughput]" id="mf_plugin_nvml[pcie_rcv_throughput]" value="on" checked> on <input type="radio" name="mf_plugin_nvml[pcie_rcv_throughput]" value="off"> off, <br>
-		&emsp;"temperature" : <input type="radio" name="mf_plugin_nvml[temperature]" id="mf_plugin_nvml[temperature]" value="on" checked> on <input type="radio" name="mf_plugin_nvml[temperature]" value="off"> off, <br>
-		&emsp;"power" : <input type="radio" name="mf_plugin_nvml[power]" id="mf_plugin_nvml[power]" value="on" checked> on <input type="radio" name="mf_plugin_nvml[power]" value="off"> off <br>
-	} ],<br>
-	<b>"mf_plugin_rapl_power"</b> : [ {<br>
-		&emsp;"total_power" : <input type="radio" name="mf_plugin_rapl_power[total_power]" id="mf_plugin_rapl_power[total_power]" value="on" checked> on <input type="radio" name="mf_plugin_rapl_power[total_power]" value="off"> off, <br>
-		&emsp;"dram_power" : <input type="radio" name="mf_plugin_rapl_power[dram_power]" id="mf_plugin_rapl_power[dram_power]" value="on" checked> on <input type="radio" name="mf_plugin_rapl_power[dram_power]" value="off"> off <br>
-	} ]<br>
-</div>
-</div>	
-<!-- <input type="submit" value="Submit" onclick="submitform(event, this)"> -->
-</form>
-	<center>
-		<button onclick="submitform(event, this)">Submit </button>
-	</center>
-</div>
+	<div id="foot_phantom"></div>
 
-<div id="debug_phantom" style="display:none">
-	<hr><p id="demoreplaceb"></p>
-</div>
-
-<div id="foot_phantom"></div>
-
-<script> load_header_footer(); </script>
+	<script> load_header_footer(); </script>
 </body>
 </html>

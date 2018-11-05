@@ -22,20 +22,28 @@ var execport = 8700;
 
 function checktoken() {
 	var menu_phantom = document.getElementById("menu_phantom");
-	var requestToken = document.getElementById("requestToken");
-	var title_login = document.getElementById("title_login");
+// 	var requestToken = document.getElementById("requestToken");
+// 	var title_login = document.getElementById("title_login");
+	var menu_login = document.getElementById("menu_login");
+	var phantom_operation = document.getElementById("phantom_operation");
 	if(!sessionStorage.token || sessionStorage.token == undefined ) {
 		if(menu_phantom) document.getElementById("menu_phantom").style.display = "none";
-		if(requestToken) document.getElementById("requestToken").style.display = "block";
-		if(title_login) document.getElementById("title_login").style.display = "block";
+		if(phantom_operation) document.getElementById("phantom_operation").style.display = "none";
+// 		if(requestToken) document.getElementById("requestToken").style.display = "block";
+// 		if(title_login) document.getElementById("title_login").style.display = "block";
+		if(menu_login) document.getElementById("menu_login").style.display = "block";
 	}else if (sessionStorage.token.length == 0) {
 		if(menu_phantom) document.getElementById("menu_phantom").style.display = "none";
-		if(requestToken) document.getElementById("requestToken").style.display = "block";
-		if(title_login) document.getElementById("title_login").style.display = "block";
+		if(phantom_operation) document.getElementById("phantom_operation").style.display = "none";
+// 		if(requestToken) document.getElementById("requestToken").style.display = "block";
+// 		if(title_login) document.getElementById("title_login").style.display = "block";
+		if(menu_login) document.getElementById("menu_login").style.display = "block";
 	}else{
 		if(menu_phantom) document.getElementById("menu_phantom").style.display = "block";
-		if(requestToken) document.getElementById("requestToken").style.display = "none";
-		if(title_login) document.getElementById("title_login").style.display = "none";
+		if(phantom_operation) document.getElementById("phantom_operation").style.display = "block";
+// 		if(requestToken) document.getElementById("requestToken").style.display = "none";
+// 		if(title_login) document.getElementById("title_login").style.display = "none";
+		if(menu_login) document.getElementById("menu_login").style.display = "none";
 	}
 // 	if(sessionStorage.token != undefined)
 // 	if(title_login) document.getElementById("title_login").innerHTML = " "+JSON.stringify(sessionStorage);
@@ -116,7 +124,7 @@ function start_page_new() {
 function logout() {
 	sessionStorage.setItem('token', '');
 	request_share_session_storage();
-	checktoken();
+// 	checktoken();
 	window.location = 'devicemanager.html';
 	return false;
 }
@@ -127,6 +135,24 @@ function getType(p) {
 	else if (typeof p == 'string') return 'string';
 	else if (p != null && typeof p == 'object') return 'object';
 	else return 'other';
+}
+
+
+function load_menu_login(){
+	var menuhtml="<H1 id=\"title_login\" style=\"overflow-wrap:break-word; max-width:80%; word-break:break-all;\"><b>LOGIN into DEVICE-MANAGER</b></H1>";
+	menuhtml+="<form";
+	menuhtml+="	id='requestToken'";
+	menuhtml+="	method='get'";
+	menuhtml+="	name=\"myForm\">";
+// <!-- 		encType="multipart/form-data"> //for post not for get-->
+	menuhtml+="	<div class=\"center\">";
+	menuhtml+="		User: <input type=\"text\" name=\"user\" id=\"user\" value=\"\"><br>";
+	menuhtml+="		Password: <input type=\"password\" name=\"password\" id=\"password\" value=\"\"> <br>";
+	menuhtml+="		<input type=\"hidden\" name=\"pretty\" value=\"true\" />";
+	menuhtml+="		<input type=\"submit\" onclick=\" resourcelogin(document.getElementById('user').value, document.getElementById('password').value); return false;\" value=\"LOGIN\" />";
+	menuhtml+="	</div>";
+	menuhtml+="</form>";
+	document.getElementById("menu_login").innerHTML = menuhtml;
 }
 
 function load_header(){
@@ -168,7 +194,9 @@ function load_footer(){
 
 function load_header_footer(){
 	load_header();
+	load_menu_login();
 	load_footer();
+	checktoken();
 }
 
 function applogin(user,password){
@@ -201,12 +229,19 @@ function resourcelogin(user,password){
 			var serverResponse = xhr.responseText;
 			savetoken(serverResponse);
 			checktoken();
+			var menuhtml="<H1 style=\"overflow-wrap:break-word; max-width:80%; word-break:break-all;\"><b>Choose one option from the top menu</b></H1>";
+			document.getElementById("menu_login").innerHTML = menuhtml;
+			document.getElementById("menu_login").style.display = "block";
 		}else{
+			logout();
+// 			checktoken();
+			load_menu_login();
+			document.getElementById("menu_login").style.display = "block";
 			var serverResponse = xhr.responseText;
+			var menu_phantom = document.getElementById("menu_phantom"); //top menu
+			if(menu_phantom) document.getElementById("menu_phantom").style.display = "none";
 			document.getElementById("demoreplaceb").innerHTML = "Error: "+ serverResponse;
 			document.getElementById("debug_phantom").style.display = "block";
-			logout();
-			checktoken();
 		}
 	};
 	xhr.send(null);
@@ -625,7 +660,6 @@ function list_results(mytype,url,fields_toshow,filtered_fields){
 					html += JSON.stringify(myjson);
 				}
 			}
-// 			console.log("html is "+html);
 			//document.getElementById('demoreplaceb').innerHTML = JSON.stringify(myjson) + "<br>" + html;// myjson[0].project;
 			document.getElementById('demoreplaceb').innerHTML = html;
 			document.getElementById("debug_phantom").style.display = "block";
@@ -702,4 +736,3 @@ function update_config_with_token( UploadJSON ,url) {
 // 	}
 	return false;
 }
-

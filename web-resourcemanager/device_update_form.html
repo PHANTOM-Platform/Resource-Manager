@@ -16,10 +16,8 @@
 	<title>PHANTOM RESOURCE-MANAGER</title>
 	<link rel="stylesheet" type="text/css" href="phantom.css">
 	<script src="devicemanager.js"></script> 		
-<meta name="viewport" content="width=device-width, initial-scale=1">
-</head>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
 
-<body onload="start_page_new()">
 
 <script>
 function update_fpga_details(selection) {
@@ -136,9 +134,6 @@ function setup_workstation(cpu_type, cpu_cores, ram_size_bytes,gpu_type,fpga_typ
 	update_gpu_details(gpu_type);
 	update_fpga_details(fpga_type);
 }
-</script>
-
-<script>
 
 function submitform(e, frm) {
 	if (document.getElementById('device').value == '') {
@@ -186,119 +181,124 @@ mquery={
 	}
 }
 </script>
+</head>
 
+<body onload="start_page_new()">
+	<div id="menu_phantom"></div>
 
-<div id="menu_phantom"></div>
+	<div id="menu_login" style="display:none"></div>
 
-<h1><b>Register or Update a single device</b> </h1>
+	<div id="phantom_operation">
+		<h1><b>Register or Update a single device</b> </h1>
 
-<div id="phantom_form" style="display:block">
-<form name="frm" id="frm" >
-<hr><br>
+		<div id="phantom_form" style="display:block">
+			<form name="frm" id="frm" >
+			<hr><br>
 
-<h2><b> Available default configuration for systems: </b></h2>
-&emsp;&emsp;<button type="button" onclick="setup_workstation('Intel_i7','4',4*1024*1024*1024,'na','na')">Laptop i7</button>
-<button type="button" onclick="setup_workstation('ARM32','2',1*1024*1024*1024,'na','zc706')">Xilinx XC706</button><!--ARM Cortex-A9-->
-<button type="button" onclick="setup_workstation('Intel_i7','4',8*1024*1024*1024,'K40','na')">Server with TeslaK40</button>
-<button type="button" onclick="setup_workstation('ARM64','4',1*1024*1024*1024,'na','na')">Raspberry Pi3</button> 
-<button type="button" onclick="setup_workstation('ARM64','8',2*1024*1024*1024,'na','na')">Odriod Xu4</button><!-- LPDDR3 -->
+			<h2><b> Available default configuration for systems: </b></h2>
+			&emsp;&emsp;<button type="button" onclick="setup_workstation('Intel_i7','4',4*1024*1024*1024,'na','na')">Laptop i7</button>
+			<button type="button" onclick="setup_workstation('ARM32','2',1*1024*1024*1024,'na','zc706')">Xilinx XC706</button><!--ARM Cortex-A9-->
+			<button type="button" onclick="setup_workstation('Intel_i7','4',8*1024*1024*1024,'K40','na')">Server with TeslaK40</button>
+			<button type="button" onclick="setup_workstation('ARM64','4',1*1024*1024*1024,'na','na')">Raspberry Pi3</button> 
+			<button type="button" onclick="setup_workstation('ARM64','8',2*1024*1024*1024,'na','na')">Odriod Xu4</button><!-- LPDDR3 -->
 
-<h2><b> Online formular: </b></h2>
+			<h2><b> Online formular: </b></h2>
 
-<form method="post" action="myform_device_update">
-{<br>
-		&emsp;"device" : <input type="text" id="device" name="device" value="node01">,<br>
-		&emsp;"disabled" : <input type="radio" id="disabledyes" name="disabled" value="yes"> yes <input type="radio" id="disabledno" name="disabled" value="no" checked> no,<br>
-		&emsp;"mac" : <input type="text" id="mac" name="mac" value="00:00:00:00:00:00"><br>
-		&emsp;"ip" : <input type="text" id="ip" name="ip" value="0.0.0.0">,<br>
-		&emsp;"cpu_type" :
-			<select id="cpu_type" name="cpu_type" id="cpu_type" onchange="update_cpu_details(this.value)">
-				<option value="Intel_i3" selected>Intel_i3</option>
-				<option value="Intel_i5">Intel_i5</option>
-				<option value="Intel_i7">Intel_i7</option>
-				<option value="Intel_i9">Intel_i9</option>
-				<option value="Intel_x86-32">Intel_x86-32</option><!-- Intel Galileo -->
-				<option value="ARM32">ARM32</option><!-- Beagle-Bone ARM Cortex-A8 1GHz 32 bits -->
-				<option value="ARM64">ARM64</option><!-- Raspberry pi3 (4xARMv8-A53 64bits 1.2GHz) + Odriod (4x ARMv7-A15 2GHz + 4x ARMv7-A7 1.5GHz)-->
-			</select>,<br>
-		&emsp;"cpu_cores" : <input type="text" id="cpu_cores" name="cpu_cores" value="4">,<br>
-		&emsp;"ram_size_bytes" : <input type="text" id="ram_size_bytes" name="ram_size_bytes" value="1073741824"> (bytes),<br>
-<!-- 		Reference values (not required for monitoring):<br> -->
-<!-- 		&emsp;"cpu_max_frequency" : <input type="text" name="cpu_max_frequency" id="cpu_max_frequency" value="0"> (GB/s),<br> -->
-		<br>
-		<hr width="50%" align="left">
-		&emsp;"gpu_type" :
-			<select id="gpu_type" name="gpu_type" onchange="update_gpu_details(this.value)">
-				<optgroup label="Not Available:">
-				<option selected value="na">na</option>
-				<optgroup label="NVIDIA Tesla Line:">
-<!-- 				<option value="tesla03">X2070, X2090</option>-->
-					<option value="S2050"> S2050:1792 cores  3GB GDDR5 bandwidth 148.4</option>
-					<option value="C2050"> C2050: 448 cores  3GB GDDR5 bandwidth 144</option>
-					<option value="C2070"> C2070: 448 cores  6GB GDDR5 bandwidth 144</option>
-					<option value="C2075"> C2075: 448 cores  6GB GDDR5 bandwidth 144</option>
-					<option value="M2050"> M2050: 448 cores  3GB GDDR5 bandwidth 148.4</option>
-					<option value="M2070"> M2070: 448 cores  6GB GDDR5 bandwidth 150.3</option>
-					<option value="M2090"> M2090: 512 cores  6GB GDDR5 bandwidth 177.6</option>
-					<option value=  "k10"> K10:  3072 cores  8GB GDDR5 bandwidth 320</option>
-					<option value=  "K20"> K20:  2496 cores  5GB GDDR5 bandwidth 208</option>
-					<option value=  "K40"> K40:  2880 cores 12GB GDDR5 bandwidth 288</option>
-					<option value=  "K80"> K80:  4992 cores 24GB GDDR5 bandwidth 480</option>
-				<optgroup label="NVIDIA Quadro Line:">
-					<option value=  "400">  400:  48 cores 512MB GDDR5  bandwidth  12.3</option>
-					<option value= "2000"> 2000: 192 cores  1GB GDDR5   bandwidth  41.6</option>
-					<option value= "4000"> 4000: 256 cores  2GB GDDR5   bandwidth  89.6</option>
-					<option value= "5000"> 5000: 352 cores  2.5GB GDDR5 bandwidth 120</option>
-					<option value= "6000"> 6000: 448 cores  6GB GDDR5   bandwidth 144</option>
-					<option value="K2000">K2000: 384 cores  2GB GDDR5   bandwidth  64</option>
-					<option value="K4000">K4000: 768 cores  3GB GDDR5   bandwidth 134</option>
-					<option value="K5000">K5000:1536 cores  4GB GDDR5   bandwidth 173</option>
-					<option value="K6000">K6000:2880 cores 12GB GDDR5   bandwidth 288</option>
-<!-- 			<optgroup label="NVIDIA GRID Line:">	 -->
-<!-- 				<option value="grid01">K1, K2, K340, K520</option>-->
-				<optgroup label="Limited Supported Tesla cards:">
-					<option value="teslaz01">previous Tesla card</option>
-				<optgroup label="Limited Supported Quadro cards:">
-					<option value="teslaz01">previous Quadro card</option>
-				<optgroup label="Limited Supported GeForce cards:">
-					<option value="GeForce">Any GeForce card</option>
-			</select>*,<br>
-			Addtional reference values (not required for monitoring), leave as "-1" if unknown:<br>
-			&emsp;"gpu_memory_bandwidth" : <input type="text" name="gpu_mem_bd" id="gpu_mem_bd" value="0"> (GB/s),<br>
-			&emsp;"gpu_memory_size": <input type="text" id="gpu_mem" name="gpu_mem" value="0"> (GB),<br>
-			&emsp;"gpu_cores": <input type="text" id="gpu_cores" name="gpu_cores" value="0">,<br>
-		<br>
-		<hr width="50%" align="left">
-		&emsp;"fpga_type" :
-			<select id="fpga_type" name="fpga_type" id="fpga_type" onchange="update_fpga_details(this.value)">
-				<optgroup label="Not Available:">
-				<option selected value="na">na</option>
-				<optgroup label="Zynq series:">
-					<option value="zc706">zc706</option>
-			</select>,<br>
-			Addtional reference values (not required for monitoring), leave as "-1" if unknown:<br>
-			&emsp;"fpga_logic_gates": <input type="text" id="fpga_logic_gates" name="fpga_logic_gates" value="0" STYLE="background-color:white;">,<br>
-			&emsp;"fpga_slice_regs": <input type="text" id="fpga_slice_regs" name="fpga_slice_regs" value="0">,<br>
-			&emsp;"fpga_xadc": <input type="text" id="fpga_xadc" name="fpga_xadc" value="0">,<br>
-			&emsp;"fpga_iob": <input type="text" id="fpga_iob" name="fpga_iob" value="0"><br>
-		<br>
-	}<br>
-	
-*: <a href="https://docs.nvidia.com/deploy/nvml-api/nvml-api-reference.html#nvml-api-reference"> updated list at Nvidia.com of the supported cards.</a><br>
-<!-- <input type="submit" value="Submit"> -->
-<!-- <input type="submit" value="Submit" onclick="submitform(event, this)"> -->
-</form>
-	<center>
-		<button onclick="submitform(event, this)">Submit </button>
-	</center>
-</div>
+			<form method="post" action="myform_device_update">
+			{<br>
+					&emsp;"device" : <input type="text" id="device" name="device" value="node01">,<br>
+					&emsp;"disabled" : <input type="radio" id="disabledyes" name="disabled" value="yes"> yes <input type="radio" id="disabledno" name="disabled" value="no" checked> no,<br>
+					&emsp;"mac" : <input type="text" id="mac" name="mac" value="00:00:00:00:00:00"><br>
+					&emsp;"ip" : <input type="text" id="ip" name="ip" value="0.0.0.0">,<br>
+					&emsp;"cpu_type" :
+						<select id="cpu_type" name="cpu_type" id="cpu_type" onchange="update_cpu_details(this.value)">
+							<option value="Intel_i3" selected>Intel_i3</option>
+							<option value="Intel_i5">Intel_i5</option>
+							<option value="Intel_i7">Intel_i7</option>
+							<option value="Intel_i9">Intel_i9</option>
+							<option value="Intel_x86-32">Intel_x86-32</option><!-- Intel Galileo -->
+							<option value="ARM32">ARM32</option><!-- Beagle-Bone ARM Cortex-A8 1GHz 32 bits -->
+							<option value="ARM64">ARM64</option><!-- Raspberry pi3 (4xARMv8-A53 64bits 1.2GHz) + Odriod (4x ARMv7-A15 2GHz + 4x ARMv7-A7 1.5GHz)-->
+						</select>,<br>
+					&emsp;"cpu_cores" : <input type="text" id="cpu_cores" name="cpu_cores" value="4">,<br>
+					&emsp;"ram_size_bytes" : <input type="text" id="ram_size_bytes" name="ram_size_bytes" value="1073741824"> (bytes),<br>
+			<!-- 		Reference values (not required for monitoring):<br> -->
+			<!-- 		&emsp;"cpu_max_frequency" : <input type="text" name="cpu_max_frequency" id="cpu_max_frequency" value="0"> (GB/s),<br> -->
+					<br>
+					<hr width="50%" align="left">
+					&emsp;"gpu_type" :
+						<select id="gpu_type" name="gpu_type" onchange="update_gpu_details(this.value)">
+							<optgroup label="Not Available:">
+							<option selected value="na">na</option>
+							<optgroup label="NVIDIA Tesla Line:">
+			<!-- 				<option value="tesla03">X2070, X2090</option>-->
+								<option value="S2050"> S2050:1792 cores  3GB GDDR5 bandwidth 148.4</option>
+								<option value="C2050"> C2050: 448 cores  3GB GDDR5 bandwidth 144</option>
+								<option value="C2070"> C2070: 448 cores  6GB GDDR5 bandwidth 144</option>
+								<option value="C2075"> C2075: 448 cores  6GB GDDR5 bandwidth 144</option>
+								<option value="M2050"> M2050: 448 cores  3GB GDDR5 bandwidth 148.4</option>
+								<option value="M2070"> M2070: 448 cores  6GB GDDR5 bandwidth 150.3</option>
+								<option value="M2090"> M2090: 512 cores  6GB GDDR5 bandwidth 177.6</option>
+								<option value=  "k10"> K10:  3072 cores  8GB GDDR5 bandwidth 320</option>
+								<option value=  "K20"> K20:  2496 cores  5GB GDDR5 bandwidth 208</option>
+								<option value=  "K40"> K40:  2880 cores 12GB GDDR5 bandwidth 288</option>
+								<option value=  "K80"> K80:  4992 cores 24GB GDDR5 bandwidth 480</option>
+							<optgroup label="NVIDIA Quadro Line:">
+								<option value=  "400">  400:  48 cores 512MB GDDR5  bandwidth  12.3</option>
+								<option value= "2000"> 2000: 192 cores  1GB GDDR5   bandwidth  41.6</option>
+								<option value= "4000"> 4000: 256 cores  2GB GDDR5   bandwidth  89.6</option>
+								<option value= "5000"> 5000: 352 cores  2.5GB GDDR5 bandwidth 120</option>
+								<option value= "6000"> 6000: 448 cores  6GB GDDR5   bandwidth 144</option>
+								<option value="K2000">K2000: 384 cores  2GB GDDR5   bandwidth  64</option>
+								<option value="K4000">K4000: 768 cores  3GB GDDR5   bandwidth 134</option>
+								<option value="K5000">K5000:1536 cores  4GB GDDR5   bandwidth 173</option>
+								<option value="K6000">K6000:2880 cores 12GB GDDR5   bandwidth 288</option>
+			<!-- 			<optgroup label="NVIDIA GRID Line:">	 -->
+			<!-- 				<option value="grid01">K1, K2, K340, K520</option>-->
+							<optgroup label="Limited Supported Tesla cards:">
+								<option value="teslaz01">previous Tesla card</option>
+							<optgroup label="Limited Supported Quadro cards:">
+								<option value="teslaz01">previous Quadro card</option>
+							<optgroup label="Limited Supported GeForce cards:">
+								<option value="GeForce">Any GeForce card</option>
+						</select>*,<br>
+						Addtional reference values (not required for monitoring), leave as "-1" if unknown:<br>
+						&emsp;"gpu_memory_bandwidth" : <input type="text" name="gpu_mem_bd" id="gpu_mem_bd" value="0"> (GB/s),<br>
+						&emsp;"gpu_memory_size": <input type="text" id="gpu_mem" name="gpu_mem" value="0"> (GB),<br>
+						&emsp;"gpu_cores": <input type="text" id="gpu_cores" name="gpu_cores" value="0">,<br>
+					<br>
+					<hr width="50%" align="left">
+					&emsp;"fpga_type" :
+						<select id="fpga_type" name="fpga_type" id="fpga_type" onchange="update_fpga_details(this.value)">
+							<optgroup label="Not Available:">
+							<option selected value="na">na</option>
+							<optgroup label="Zynq series:">
+								<option value="zc706">zc706</option>
+						</select>,<br>
+						Addtional reference values (not required for monitoring), leave as "-1" if unknown:<br>
+						&emsp;"fpga_logic_gates": <input type="text" id="fpga_logic_gates" name="fpga_logic_gates" value="0" STYLE="background-color:white;">,<br>
+						&emsp;"fpga_slice_regs": <input type="text" id="fpga_slice_regs" name="fpga_slice_regs" value="0">,<br>
+						&emsp;"fpga_xadc": <input type="text" id="fpga_xadc" name="fpga_xadc" value="0">,<br>
+						&emsp;"fpga_iob": <input type="text" id="fpga_iob" name="fpga_iob" value="0"><br>
+					<br>
+				}<br>
+				
+			*: <a href="https://docs.nvidia.com/deploy/nvml-api/nvml-api-reference.html#nvml-api-reference"> updated list at Nvidia.com of the supported cards.</a><br>
+			<!-- <input type="submit" value="Submit"> -->
+			<!-- <input type="submit" value="Submit" onclick="submitform(event, this)"> -->
+			</form>
+			<center>
+				<button onclick="submitform(event, this)">Submit </button>
+			</center>
+		</div>
+	</div>
 
-<div id="debug_phantom" style="display:none">
-	<hr><p id="demoreplaceb"></p>
-</div>
+	<div id="debug_phantom" style="display:none">
+		<hr><p id="demoreplaceb"></p>
+	</div>
 
-<div id="foot_phantom"></div>
+	<div id="foot_phantom"></div>
 
-<script> load_header_footer(); </script>
+	<script> load_header_footer(); </script>
 </body>
 </html>

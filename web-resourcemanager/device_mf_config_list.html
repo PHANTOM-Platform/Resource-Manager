@@ -19,33 +19,37 @@
 
 <body onload="start_page_new()">
 	<div id="menu_phantom"></div>
+
+	<div id="menu_login" style="display:none"></div>
+
+	<div id="phantom_operation">	
+		<h1><b>LIST OF Registered DEVICEs</b></h1>
+
+		<h2><b> Online formular: Retrieve Mf-Configuration of DEVICEs</b></h2>
+		<form 
+			id='queryForm'
+			method='get'
+			name="myForm">
+		<!-- 	encType="multipart/form-data"> this is only for post requests-->
+			<div class="center">
+				DEVICE name (optional): <input type="text" name="appname" id="appname" value=""> leave empty if not wish to filter by name<br>
+				<input type="hidden" name="pretty" value="true">
+				<!-- upload button-->
+				<input type="submit" onclick="return list_mf_config_devices(4,document.getElementById('appname').value)" value="ONLY list the name of the Devices" />
+				<input type="submit" onclick="return list_mf_config_devices(1,document.getElementById('appname').value)" value="Show results in Table" />
+				<input type="submit" onclick="return list_mf_config_devices(2,document.getElementById('appname').value)" value="Show results as JSON" />
+				<input type="submit" onclick="return list_mf_config_devices(3,document.getElementById('appname').value)" value="Show raw reply from server" />
+			</div>
+		</form>
+	</div>
 	
-<h1><b>LIST OF Registered DEVICEs</b></h1>
-
-<h2><b> Online formular: Retrieve Mf-Configuration of DEVICEs</b></h2>
-	<form 
-	id='queryForm'
-	method='get'
-	name="myForm">
-<!-- 	encType="multipart/form-data"> this is only for post requests-->
-	<div class="center">
-	DEVICE name (optional): <input type="text" name="appname" id="appname" value=""> leave empty if not wish to filter by name<br>
-	<input type="hidden" name="pretty" value="true">
-	<!-- upload button-->
-	<input type="submit" onclick="return list_mf_config_devices(4,document.getElementById('appname').value)" value="ONLY list the name of the Devices" />
-	<input type="submit" onclick="return list_mf_config_devices(1,document.getElementById('appname').value)" value="Show results in Table" />
-	<input type="submit" onclick="return list_mf_config_devices(2,document.getElementById('appname').value)" value="Show results as JSON" />
-	<input type="submit" onclick="return list_mf_config_devices(3,document.getElementById('appname').value)" value="Show raw reply from server" />
-</div>
-</form>
-
 <!--<b>Tested command line example with curl:</b>
 <p style="color:DodgerBlue;">
 curl -XGET 'http://localhost:8000/query_metadata?Path=mypath%2F&filename=main.c'
 </p>-->
 
 	<div id="debug_phantom" style="display:none">
-	<hr><p id="demoreplaceb"></p>
+		<hr><p id="demoreplaceb"></p>
 	</div>
 
 	<div id="foot_phantom"></div>
