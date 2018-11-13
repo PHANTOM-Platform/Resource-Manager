@@ -603,13 +603,13 @@ app.get('/PleaseEnableJavascript.html', function(req, res) {
 	retrieve_file(filePath,res);
 });
 //**********************************************************
-app.get('/devicemanager.html', function(req, res) {
-	var filePath = '../web-resourcemanager/devicemanager.html';
+app.get('/resourcemanager.html', function(req, res) {
+	var filePath = '../web-resourcemanager/resourcemanager.html';
 	retrieve_file(filePath,res);
 }); 
 //*******************************
-app.get('/devicemanager.js', function(req, res) {
-	var filePath = '../web-resourcemanager/devicemanager.js';
+app.get('/resourcemanager.js', function(req, res) {
+	var filePath = '../web-resourcemanager/resourcemanager.js';
 	retrieve_file(filePath,res);
 }); 
 //*******************************
@@ -1656,6 +1656,9 @@ var jsontext_obj={
 	}, mf_plugin_rapl_power : {
 		total_power : req.body.mf_plugin_rapl_power.total_power,
 		dram_power : req.body.mf_plugin_rapl_power.dram_power
+	}, mf_plugin_xilinx_fpga : {
+		temperature : req.body.mf_plugin_xilinx_fpga.temperature,
+		power : req.body.mf_plugin_xilinx_fpga.power
 	}
 };
 // 	console.log(JSON.stringify(jsontext_obj,null,2));
@@ -1861,6 +1864,7 @@ app.get('/login', function(req, res) {
 		}else{
 			res.writeHead(401, {"Content-Type": contentType_text_plain});
 			res.end("401 (Unauthorized) Autentication failed, incorrect user " +" or passwd " +"\n"); 
+// 			console.log("resultCount "+resultCount);
 			resultlog = LogsModule.register_log(es_servername+":"+es_port,SERVERDB, 401, req.connection.remoteAddress,
 				"401: Bad Request of Token, incorrect user or passwd "+email+"or passwd ",currentdate,"");
 		}

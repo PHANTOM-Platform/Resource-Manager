@@ -52,18 +52,22 @@ compose_query_status_id: function(id_string ){
 compose_query_status: function(id_string ){
 	var mquery;
 	if (id_string != undefined && id_string.length >0) {
-		mquery={"query":{"bool":{"must":[{"match_phrase":{"host":id_string}}, {"term": {"host_length": id_string.length} } ]}}};
+		mquery={"query":{"bool":{"must":[{"match_phrase":{"host":id_string}}, {"term": {"host_length": id_string.length} } ]}},
+		"sort": { "host": { "order": "asc" }}
+		};
 	}else{
-		mquery={"query":{"match_all": {} }};
+		mquery={"query":{"match_all": {} }, "sort": { "host": { "order": "asc" }}};
 	}
 	return mquery;
 },
 compose_query_mf_config: function(id_string ){
 	var mquery;
 	if (id_string != undefined && id_string.length >0) {
-		mquery={"query":{"bool":{"must":[{"match_phrase":{"generic.platform_id":id_string}}, {"term": {"generic.platform_id_length": id_string.length} } ]}}};
+		mquery={"query":{"bool":{"must":[{"match_phrase":{"generic.platform_id":id_string}}, {"term": {"generic.platform_id_length": id_string.length} } ]}},
+		"sort": { "generic.platform_id": { "order": "asc" }}
+		};
 	}else{
-		mquery={"query":{"match_all": {} }};
+		mquery={"query":{"match_all": {} }, "sort": { "generic.platform_id": { "order": "asc" }}};
 	}
 	return mquery;
 },
@@ -233,7 +237,7 @@ find_device: function(es_server, my_index, device, pretty){
 				index: my_index,
 				type: my_type,
 				size: 10000,
-				body:{"query":{"match_all": {} }}
+				body:{"query":{"match_all": {} }, "sort": { "device": { "order": "asc" }}}
 			}, function(error, response) {
 				if (error){
 					reject("search error: "+error)
