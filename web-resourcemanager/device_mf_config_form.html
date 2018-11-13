@@ -15,27 +15,73 @@
 
 	<title>PHANTOM RESOURCE-MANAGER</title>
 	<link rel="stylesheet" type="text/css" href="phantom.css">
-	<script src="devicemanager.js"></script>
+	<script src="resourcemanager.js"></script>
 
 <script>
 	function submitform(e, frm) {
 		if (document.getElementById('generic[platform_id]').value == '') {
 			alert('Missing field platform_id !!');
 		} else {
-
+			var plugin_board_power = (document.getElementById('plugins[mf_plugin_board_power_on]').checked == true) ? "on":"off";
+			var plugin_cpu_perf = (document.getElementById('plugins[mf_plugin_cpu_perf_on]').checked == true) ? "on":"off";
+			var plugin_cpu_temperature = (document.getElementById('plugins[mf_plugin_cpu_temperature_on]').checked == true) ? "on":"off";
+			var plugin_linux_resources = (document.getElementById('plugins[mf_plugin_linux_resources_on]').checked == true) ? "on":"off";
+			var plugin_linux_sys_power = (document.getElementById('plugins[mf_plugin_linux_sys_power_on]').checked == true) ? "on":"off";
+			var plugin_nvml = (document.getElementById('plugins[mf_plugin_nvml_on]').checked == true) ? "on":"off";
+			var plugin_rapl_power = (document.getElementById('plugins[mf_plugin_rapl_power_on]').checked == true) ? "on":"off";
+			var plugin_xilinx = (document.getElementById('plugins[mf_plugin_xilinx_fpga_on]').checked == true) ? "on":"off";
+	// --------------------------------------------		
+			var device0_current = (document.getElementById('mf_plugin_board_power[device0_current]').checked == true) ? "on":"off";
+			var device0_vshunt  = (document.getElementById('mf_plugin_board_power[device0_vshunt]').checked == true) ? "on":"off";
+			var device0_vbus    = (document.getElementById('mf_plugin_board_power[device0_vbus]').checked == true) ? "on":"off";
+			var device0_power   = (document.getElementById('mf_plugin_board_power[device0_power]').checked == true) ? "on":"off";
+	// --------------------------------------------		
+			var mflips = (document.getElementById('mf_plugin_cpu_perf[mflips]').checked == true) ? "on":"off";
+			var mflops = (document.getElementById('mf_plugin_cpu_perf[mflops]').checked == true) ? "on":"off";
+			var mips   = (document.getElementById('mf_plugin_cpu_perf[mips]').checked == true) ? "on":"off";
+	// --------------------------------------------		
+			var cpu0_core0 = (document.getElementById('mf_plugin_cpu_temperature[cpu0_core0]').checked == true) ? "on":"off";
+			var cpu0_core1 = (document.getElementById('mf_plugin_cpu_temperature[cpu0_core1]').checked == true) ? "on":"off";
+	// --------------------------------------------		
+			var cpu_usage_rate  = (document.getElementById('mf_plugin_linux_resources[cpu_usage_rate]').checked == true) ? "on":"off";
+			var ram_usage_rate  = (document.getElementById('mf_plugin_linux_resources[ram_usage_rate]').checked == true) ? "on":"off";
+			var swap_usage_rate = (document.getElementById('mf_plugin_linux_resources[swap_usage_rate]').checked == true) ? "on":"off";
+			var net_throughput  = (document.getElementById('mf_plugin_linux_resources[net_throughput]').checked == true) ? "on":"off";
+			var io_throughput   = (document.getElementById('mf_plugin_linux_resources[io_throughput]').checked == true) ? "on":"off";
+	// --------------------------------------------		
+			var estimated_cpu_power    = (document.getElementById('mf_plugin_linux_sys_power[estimated_cpu_power]').checked == true) ? "on":"off";
+			var estimated_wifi_power   = (document.getElementById('mf_plugin_linux_sys_power[estimated_wifi_power]').checked == true) ? "on":"off";
+			var estimated_memory_power = (document.getElementById('mf_plugin_linux_sys_power[estimated_memory_power]').checked == true) ? "on":"off";
+			var estimated_disk_power   = (document.getElementById('mf_plugin_linux_sys_power[estimated_disk_power]').checked == true) ? "on":"off";
+			var estimated_total_power  = (document.getElementById('mf_plugin_linux_sys_power[estimated_total_power]').checked == true) ? "on":"off";
+	// --------------------------------------------		
+			var nvml_gpu_usage_rate = (document.getElementById('mf_plugin_nvml[gpu_usage_rate]').checked == true) ? "on":"off";
+			var nvml_mem_usage_rate = (document.getElementById('mf_plugin_nvml[mem_usage_rate]').checked == true) ? "on":"off";
+			var nvml_mem_allocated  = (document.getElementById('mf_plugin_nvml[mem_allocated]').checked == true) ? "on":"off";
+			var nvml_pcie_snd_throughput = (document.getElementById('mf_plugin_nvml[pcie_snd_throughput]').checked == true) ? "on":"off";
+			var nvml_pcie_rcv_throughput = (document.getElementById('mf_plugin_nvml[pcie_rcv_throughput]').checked == true) ? "on":"off";
+			var nvml_temperature = (document.getElementById('mf_plugin_nvml[temperature]').checked == true) ? "on":"off";
+			var nvml_power = (document.getElementById('mf_plugin_nvml[power]').checked == true) ? "on":"off";
+	// --------------------------------------------		
+			var rapl_total_power = (document.getElementById('mf_plugin_rapl_power[total_power]').checked == true) ? "on":"off";
+			var rapl_dram_power  = (document.getElementById('mf_plugin_rapl_power[dram_power]').checked == true) ? "on":"off";
+	// --------------------------------------------		
+			var xlnx_temperature = (document.getElementById('mf_plugin_xilinx_fpga[temperature]').checked == true) ? "on":"off";
+			var xlnx_power       = (document.getElementById('mf_plugin_xilinx_fpga[power]').checked == true) ? "on":"off";
+		
 	mquery={
 		"generic" : {
 			"platform_id" : document.getElementById('generic[platform_id]').value,
 			"bulk_size" : document.getElementById('generic[bulk_size]').value
 		},"plugins" : {
-			"mf_plugin_board_power" : document.getElementById('plugins[mf_plugin_board_power]').value,
-			"mf_plugin_cpu_perf" : document.getElementById('plugins[mf_plugin_cpu_perf]').value,
-			"mf_plugin_cpu_temperature" : document.getElementById('plugins[mf_plugin_cpu_temperature]').value,
-			"mf_plugin_linux_resources" : document.getElementById('plugins[mf_plugin_linux_resources]').value,
-			"mf_plugin_linux_sys_power" : document.getElementById('plugins[mf_plugin_linux_sys_power]').value,
-			"mf_plugin_nvml" : document.getElementById('plugins[mf_plugin_nvml]').value,
-			"mf_plugin_rapl_power" : document.getElementById('plugins[mf_plugin_rapl_power]').value,
-			"mf_plugin_xilinx_fpga" : document.getElementById('plugins[mf_plugin_xilinx_fpga]').value
+			"mf_plugin_board_power" : plugin_board_power,
+			"mf_plugin_cpu_perf" : plugin_cpu_perf,
+			"mf_plugin_cpu_temperature" : plugin_cpu_temperature,
+			"mf_plugin_linux_resources" : plugin_linux_resources,
+			"mf_plugin_linux_sys_power" : plugin_linux_sys_power,
+			"mf_plugin_nvml" : plugin_nvml,
+			"mf_plugin_rapl_power" : plugin_rapl_power,
+			"mf_plugin_xilinx_fpga" : plugin_xilinx
 		}, "timings" : {
 			"default" : document.getElementById('timings[default]').value,
 			"update_configuration" : document.getElementById('timings[update_configuration]').value,
@@ -45,44 +91,48 @@
 			"mf_plugin_linux_resources" : document.getElementById('timings[mf_plugin_linux_resources]').value,
 			"mf_plugin_linux_sys_power" : document.getElementById('timings[mf_plugin_linux_sys_power]').value,
 			"mf_plugin_nvml" : document.getElementById('timings[mf_plugin_nvml]').value,
-			"mf_plugin_rapl_power" : document.getElementById('timings[mf_plugin_rapl_power]').value
+			"mf_plugin_rapl_power" : document.getElementById('timings[mf_plugin_rapl_power]').value,
+			"mf_plugin_xilinx_fpga" : document.getElementById('timings[mf_plugin_xilinx_fpga]').value
 		}, "mf_plugin_board_power" : {
 			"acme_board_name" : document.getElementById('mf_plugin_board_power[acme_board_name]').value,
-			"device0_current" : document.getElementById('mf_plugin_board_power[device0_current]').value,
-			"device0_vshunt" : document.getElementById('mf_plugin_board_power[device0_vshunt]').value,
-			"device0_vbus" : document.getElementById('mf_plugin_board_power[device0_vbus]').value,
-			"device0_power" : document.getElementById('mf_plugin_board_power[device0_power]').value
+			"device0_current" : device0_current,
+			"device0_vshunt" : device0_vshunt,
+			"device0_vbus" : device0_vbus,
+			"device0_power" : device0_power
 		}, "mf_plugin_cpu_perf" : {
 			"max_cpu_cores" : document.getElementById('mf_plugin_cpu_perf[max_cpu_cores]').value,
-			"mflips" : document.getElementById('mf_plugin_cpu_perf[mflips]').value,
-			"mflops" : document.getElementById('mf_plugin_cpu_perf[mflops]').value,
-			"mips" : document.getElementById('mf_plugin_cpu_perf[mips]').value
+			"mflips" : mflips,
+			"mflops" : mflops,
+			"mips" : mips
 		}, "mf_plugin_cpu_temperature" : {
-			"cpu0_core0" : document.getElementById('mf_plugin_cpu_temperature[cpu0_core0]').value,
-			"cpu0_core1" : document.getElementById('mf_plugin_cpu_temperature[cpu0_core1]').value
+			"cpu0_core0" : cpu0_core0,
+			"cpu0_core1" : cpu0_core1
 		}, "mf_plugin_linux_resources" : {
-			"cpu_usage_rate" : document.getElementById('mf_plugin_linux_resources[cpu_usage_rate]').value,
-			"ram_usage_rate" : document.getElementById('mf_plugin_linux_resources[ram_usage_rate]').value,
-			"swap_usage_rate" : document.getElementById('mf_plugin_linux_resources[swap_usage_rate]').value,
-			"net_throughput" : document.getElementById('mf_plugin_linux_resources[net_throughput]').value,
-			"io_throughput" : document.getElementById('mf_plugin_linux_resources[io_throughput]').value
+			"cpu_usage_rate" : cpu_usage_rate,
+			"ram_usage_rate" : ram_usage_rate,
+			"swap_usage_rate" : swap_usage_rate,
+			"net_throughput" : net_throughput,
+			"io_throughput" : io_throughput
 		}, "mf_plugin_linux_sys_power" : {
-			"estimated_cpu_power" : document.getElementById('mf_plugin_linux_sys_power[estimated_cpu_power]').value,
-			"estimated_wifi_power" : document.getElementById('mf_plugin_linux_sys_power[estimated_wifi_power]').value,
-			"estimated_memory_power" : document.getElementById('mf_plugin_linux_sys_power[estimated_memory_power]').value,
-			"estimated_disk_power" : document.getElementById('mf_plugin_linux_sys_power[estimated_disk_power]').value,
-			"estimated_total_power" : document.getElementById('mf_plugin_linux_sys_power[estimated_total_power]').value
+			"estimated_cpu_power" : estimated_cpu_power,
+			"estimated_wifi_power" : estimated_wifi_power,
+			"estimated_memory_power" : estimated_memory_power,
+			"estimated_disk_power" : estimated_disk_power,
+			"estimated_total_power" : estimated_total_power
 		}, "mf_plugin_nvml" : {
-			"gpu_usage_rate" : document.getElementById('mf_plugin_nvml[gpu_usage_rate]').value,
-			"mem_usage_rate" : document.getElementById('mf_plugin_nvml[mem_usage_rate]').value,
-			"mem_allocated" : document.getElementById('mf_plugin_nvml[mem_allocated]').value,
-			"pcie_snd_throughput" : document.getElementById('mf_plugin_nvml[pcie_snd_throughput]').value,
-			"pcie_rcv_throughput" : document.getElementById('mf_plugin_nvml[pcie_rcv_throughput]').value,
-			"temperature" : document.getElementById('mf_plugin_nvml[temperature]').value,
-			"power" : document.getElementById('mf_plugin_nvml[power]').value
+			"gpu_usage_rate" : nvml_gpu_usage_rate,
+			"mem_usage_rate" : nvml_mem_usage_rate,
+			"mem_allocated" : nvml_mem_allocated,
+			"pcie_snd_throughput" : nvml_pcie_snd_throughput,
+			"pcie_rcv_throughput" : nvml_pcie_rcv_throughput,
+			"temperature" : nvml_temperature,
+			"power" : nvml_power
 		}, "mf_plugin_rapl_power" : {
-			"total_power" : document.getElementById('mf_plugin_rapl_power[total_power]').value,
-			"dram_power" : document.getElementById('mf_plugin_rapl_power[dram_power]').value
+			"total_power" : rapl_total_power,
+			"dram_power" : rapl_dram_power
+		}, "mf_plugin_xilinx_fpga" : {
+			"temperature" : xlnx_temperature,
+			"power" : xlnx_power
 		}
 	};
 	// console.log(JSON.stringify(mquery,null,2));
@@ -143,7 +193,7 @@
 			<h2><b> Online formular: </b></h2>
 
 			<div id="phantom_form" style="display:block">
-				<form name="frm" id="frm" > 
+				<form name="frm" id="frm" autocomplete="on">
 				<div class="row">
 				<div class="column" style="background-color:#8cacff;">
 				<!-- 	"registered_id" : "AWRbSGcjwHjCws13Gi1h", -->
@@ -152,14 +202,14 @@
 				&emsp;"bulk_size" : <input type="text" name="generic[bulk_size]" id="generic[bulk_size]" value="8"><br>
 				} ],<br>
 					<b>"plugins" </b>: [ {<br>
-						&emsp;"mf_plugin_board_power" : <input type="radio" id="plugins[mf_plugin_board_power]" name="plugins[mf_plugin_board_power]" value="on" checked> on <input type="radio" name="plugins[mf_plugin_board_power]" value="off"> off, <br>
-						&emsp;"mf_plugin_cpu_perf" : <input type="radio" name="plugins[mf_plugin_cpu_perf]" id="plugins[mf_plugin_cpu_perf]" value="on" checked> on <input type="radio" name="plugins[mf_plugin_cpu_perf]" value="off"> off, <br>
-						&emsp;"mf_plugin_cpu_temperature" : <input type="radio" name="plugins[mf_plugin_cpu_temperature]" id="plugins[mf_plugin_cpu_temperature]" value="on" checked> on <input type="radio" name="plugins[mf_plugin_cpu_temperature]" value="off"> off, <br>
-						&emsp;"mf_plugin_linux_resources" : <input type="radio" name="plugins[mf_plugin_linux_resources]" id="plugins[mf_plugin_linux_resources]" value="on" checked> on <input type="radio" name="plugins[mf_plugin_linux_resources]" value="off"> off, <br>
-						&emsp;"mf_plugin_linux_sys_power" : <input type="radio" name="plugins[mf_plugin_linux_sys_power]" id="plugins[mf_plugin_linux_sys_power]" value="on" checked> on <input type="radio" name="plugins[mf_plugin_linux_sys_power]" value="off"> off, <br>
-						&emsp;"mf_plugin_nvml" : <input type="radio" name="plugins[mf_plugin_nvml]" id="plugins[mf_plugin_nvml]" value="on" checked> on <input type="radio" name="plugins[mf_plugin_nvml]" value="off"> off, <br>
-						&emsp;"mf_plugin_rapl_power" : <input type="radio" name="plugins[mf_plugin_rapl_power]" id="plugins[mf_plugin_rapl_power]" value="on" checked> on <input type="radio" name="plugins[mf_plugin_rapl_power]" value="off"> off ,<br>
-						&emsp;"mf_plugin_xilinx_fpga" : <input type="radio" name="plugins[mf_plugin_xilinx_fpga]" id="plugins[mf_plugin_xilinx_fpga]" value="on" checked> on <input type="radio" name="plugins[mf_plugin_xilinx_fpga]" value="off"> off <br>
+						&emsp;"mf_plugin_board_power" : <input type="radio" name="plugins[mf_plugin_board_power]" id="plugins[mf_plugin_board_power_on]" value="on" checked> on <input type="radio" name="plugins[mf_plugin_board_power]" value="off"> off, <br>
+						&emsp;"mf_plugin_cpu_perf" : <input type="radio" name="plugins[mf_plugin_cpu_perf]" id="plugins[mf_plugin_cpu_perf_on]" value="on" checked> on <input type="radio" name="plugins[mf_plugin_cpu_perf]" value="off"> off, <br>
+						&emsp;"mf_plugin_cpu_temperature" : <input type="radio" name="plugins[mf_plugin_cpu_temperature]" id="plugins[mf_plugin_cpu_temperature_on]" value="on" checked> on <input type="radio" name="plugins[mf_plugin_cpu_temperature]" value="off"> off, <br>
+						&emsp;"mf_plugin_linux_resources" : <input type="radio" name="plugins[mf_plugin_linux_resources]" id="plugins[mf_plugin_linux_resources_on]" value="on" checked> on <input type="radio" name="plugins[mf_plugin_linux_resources]" value="off"> off, <br>
+						&emsp;"mf_plugin_linux_sys_power" : <input type="radio" name="plugins[mf_plugin_linux_sys_power]" id="plugins[mf_plugin_linux_sys_power_on]" value="on" checked> on <input type="radio" name="plugins[mf_plugin_linux_sys_power]" value="off"> off, <br>
+						&emsp;"mf_plugin_nvml" : <input type="radio" name="plugins[mf_plugin_nvml]" id="plugins[mf_plugin_nvml_on]" value="on" checked> on <input type="radio" name="plugins[mf_plugin_nvml]" value="off"> off, <br>
+						&emsp;"mf_plugin_rapl_power" : <input type="radio" name="plugins[mf_plugin_rapl_power]" id="plugins[mf_plugin_rapl_power_on]" value="on" checked> on <input type="radio" name="plugins[mf_plugin_rapl_power]" value="off"> off ,<br>
+						&emsp;"mf_plugin_xilinx_fpga" : <input type="radio" name="plugins[mf_plugin_xilinx_fpga]" id="plugins[mf_plugin_xilinx_fpga_on]" value="on" checked> on <input type="radio" name="plugins[mf_plugin_xilinx_fpga]" value="off"> off <br>
 					} ],<br>	
 					<b>	"timings"</b> : [ {<br>
 						&emsp;"default" : <input type="text" name="timings[default]" id="timings[default]" value="1000000000ns">, <br>
@@ -170,7 +220,8 @@
 						&emsp;"mf_plugin_linux_resources" : <input type="text" name="timings[mf_plugin_linux_resources]" id="timings[mf_plugin_linux_resources]" value="2000000000ns">, <br>
 						&emsp;"mf_plugin_linux_sys_power" : <input type="text" name="timings[mf_plugin_linux_sys_power]" id="timings[mf_plugin_linux_sys_power]" value="2000000000ns">, <br>
 						&emsp;"mf_plugin_nvml" : <input type="text" name="timings[mf_plugin_nvml]" id="timings[mf_plugin_nvml]" value="1000000000ns">, <br>
-						&emsp;"mf_plugin_rapl_power" : <input type="text" name="timings[mf_plugin_rapl_power]" id="timings[mf_plugin_rapl_power]" value="1000000000ns"> <br>
+						&emsp;"mf_plugin_rapl_power" : <input type="text" name="timings[mf_plugin_rapl_power]" id="timings[mf_plugin_rapl_power]" value="1000000000ns">, <br>
+						&emsp;"mf_plugin_xilinx_fpga" : <input type="text" name="timings[mf_plugin_xilinx_fpga]" id="timings[mf_plugin_xilinx_fpga]" value="1000000000ns"> <br>
 					} ],<br>
 				</div>
 				<div class="column" style="background-color:#6f98ff;">	
@@ -223,7 +274,11 @@
 					<b>"mf_plugin_rapl_power"</b> : [ {<br>
 						&emsp;"total_power" : <input type="radio" name="mf_plugin_rapl_power[total_power]" id="mf_plugin_rapl_power[total_power]" value="on" checked> on <input type="radio" name="mf_plugin_rapl_power[total_power]" value="off"> off, <br>
 						&emsp;"dram_power" : <input type="radio" name="mf_plugin_rapl_power[dram_power]" id="mf_plugin_rapl_power[dram_power]" value="on" checked> on <input type="radio" name="mf_plugin_rapl_power[dram_power]" value="off"> off <br>
-					} ]<br>
+					} ],<br>
+					<b>"mf_plugin_xilinx_fpga"</b> : [ {<br>
+						&emsp;"temperature" : <input type="radio" name="mf_plugin_xilinx_fpga[temperature]" id="mf_plugin_xilinx_fpga[temperature]" value="on" checked> on <input type="radio" name="mf_plugin_xilinx_fpga[temperature]" value="off"> off, <br>
+						&emsp;"power" : <input type="radio" name="mf_plugin_xilinx_fpga[power]" id="mf_plugin_xilinx_fpga[power]" value="on" checked> on <input type="radio" name="mf_plugin_xilinx_fpga[power]" value="off"> off <br>
+					} ]<br>					
 				</div>
 				</div>	
 			<!-- <input type="submit" value="Submit" onclick="submitform(event, this)"> -->
