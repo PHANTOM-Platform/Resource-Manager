@@ -29,7 +29,7 @@ function getType(p) {
 if (!String.prototype.endsWith) {
 	String.prototype.endsWith = function(searchString, position) {
 		var subjectString = this.toString();
-		if (typeof position !== 'number' || !isFinite(position) || Math.floor(position) !== position || position> subjectString.length) {
+		if (typeof (position) !== 'number' || !isFinite(position) || Math.floor(position) !== position || position> subjectString.length) {
 			position = subjectString.length;
 		}
 		position -= searchString.length;
@@ -44,37 +44,40 @@ if (!String.prototype.endsWith) {
 */
 function build_resource_path(){
 	var url="";
-	if(typeof resourceserver!== 'undefined'){ // Any scope
-		if((resourceserver) && resourceserver.length>0)){
+	if(typeof (resourceserver)!== 'undefined'){ // Any scope
+		if(resourceserver){
+		if(resourceserver.length>0){
 			url=url+"http://"+resourceserver;
 			if(typeof resourceport!== 'undefined') {// Any scope
 				if ((resourceport) && resourceport.lenght>0){
 					url=url+":"+resourceport;
-	}	}	}	}
+	}	}}	}	}
 	return url;
 }
 
 function build_appman_path(){
 	var url="";
-	if(typeof resourceserver!== 'undefined'){ // Any scope
-		if((resourceserver) && resourceserver.length>0)){
-			url=url+"http://"+resourceserver;
-			if(typeof resourceport!== 'undefined') {// Any scope
-				if ((resourceport) && resourceport.lenght>0){
-					url=url+":"+resourceport;
-	}	}	}	}
+	if(typeof appserver!== 'undefined'){ // Any scope
+		if(appserver){
+		if(appserver.length>0){
+			url=url+"http://"+appserver;
+			if(typeof appport!== 'undefined') {// Any scope
+				if ((appport) && appport.lenght>0){
+					url=url+":"+appport;
+	}	}	}	}}
 	return url;
 }
 
 function build_execman_path(){
 	var url="";
 	if(typeof execserver!== 'undefined'){ // Any scope
-		if((execserver) && execserver.length>0)){
+		if(execserver){
+		if(execserver.length>0){
 			url=url+"http://"+execserver;
 			if(typeof execport!== 'undefined') {// Any scope
 				if ((execport) && execport.lenght>0){
 					url=url+":"+execport;
-	}	}	}	}
+	}	}}	}	}
 	return url;
 }
 
@@ -181,7 +184,7 @@ function start_page_new() {
 	return false;
 }
 
-function logout() {
+function rm_logout() {
 	sessionStorage.setItem('token', '');
 	request_share_session_storage();
 // 	checktoken();
@@ -189,13 +192,28 @@ function logout() {
 	return false;
 }
 
+function app_logout() {
+	sessionStorage.setItem('token', '');
+	request_share_session_storage();
+// 	checktoken();
+	window.location = 'appmanager.html';
+	return false;
+}
+
+function exec_logout() {
+	sessionStorage.setItem('token', '');
+	request_share_session_storage();
+// 	checktoken();
+	window.location = 'execmanager.html';
+	return false;
+}
 
 
 /**
  * Loads the phantom login menu into the html element "meny_login"
  * @returns {Boolean} return true if succeed.
 */
-function load_menu_login(){
+function rm_load_menu_login(){
 	var menu_login = document.getElementById("menu_login");
 	if(menu_login){
 	var menuhtml="<H1 id=\"title_login\" style=\"overflow-wrap:break-word; max-width:80%; word-break:break-all;\"><b>LOGIN into RESOURCE-MANAGER</b></H1>";
@@ -208,7 +226,7 @@ function load_menu_login(){
 	menuhtml+="		User: <input type=\"text\" name=\"user\" id=\"user\" value=\"\"><br>";
 	menuhtml+="		Password: <input type=\"password\" name=\"password\" id=\"password\" value=\"\" autocomplete=\"off\"> <br>";
 	menuhtml+="		<input type=\"hidden\" name=\"pretty\" value=\"true\" />";
-	menuhtml+="		<input type=\"submit\" onclick=\" resourcelogin(document.getElementById('user').value, document.getElementById('password').value); return false;\" value=\"LOGIN\" />";
+	menuhtml+="		<input type=\"submit\" onclick=\" rm_login(document.getElementById('user').value, document.getElementById('password').value); return false;\" value=\"LOGIN\" />";
 	menuhtml+="	</div>";
 	menuhtml+="</form>";
 	menu_login.innerHTML = menuhtml;
@@ -218,7 +236,33 @@ function load_menu_login(){
 	}
 }
 
-function load_header(){
+
+
+function app_load_menu_login(){
+	var menu_login = document.getElementById("menu_login");
+	if(menu_login){
+	var menuhtml="<H1 id=\"title_login\" style=\"overflow-wrap:break-word; max-width:80%; word-break:break-all;\"><b>LOGIN into APP-MANAGER</b></H1>";
+	menuhtml+="<form";
+	menuhtml+="	id='requestToken'";
+	menuhtml+="	method='get'";
+	menuhtml+="	name=\"myForm\" autocomplete=\"on\">";
+// <!-- 		encType="multipart/form-data"> //for post not for get-->
+	menuhtml+="	<div class=\"center\">";
+	menuhtml+="		User: <input type=\"text\" name=\"user\" id=\"user\" value=\"\"><br>";
+	menuhtml+="		Password: <input type=\"password\" name=\"password\" id=\"password\" value=\"\" autocomplete=\"off\"> <br>";
+	menuhtml+="		<input type=\"hidden\" name=\"pretty\" value=\"true\" />";
+	menuhtml+="		<input type=\"submit\" onclick=\" applogin(document.getElementById('user').value, document.getElementById('password').value); return false;\" value=\"LOGIN\" />";
+	menuhtml+="	</div>";
+	menuhtml+="</form>";
+	menu_login.innerHTML = menuhtml;
+	return true;
+	}else{
+		return false;
+	}
+}
+
+
+function rm_load_header(){
 	var menu_phantom = document.getElementById("menu_phantom");
 	if(menu_phantom){
 	var menuhtml="<ul class=\"menuphantom\">";
@@ -234,7 +278,7 @@ function load_header(){
 	menuhtml+="	<img src=\"phantom.gif\" alt=\"PHANTOM\" height=\"32\" style=\"background-color:white;\"></img>";
 	menuhtml+="	</li>";
 	menuhtml+="	<li class=\"menuphantomR\">";
-	menuhtml+="		<p><a onClick=\"logout();return false;\" href=\"PleaseEnableJavascript.html\">LogOut</a></p></li>";
+	menuhtml+="		<p><a onClick=\"rm_logout();return false;\" href=\"PleaseEnableJavascript.html\">LogOut</a></p></li>";
 	menuhtml+="</ul>";
 	menuhtml+="<ul class=\"menuphantom\">";
 	menuhtml+="	<li class=\"menuphantom\"><a href=\"device_mf_config_list.html\">List the MF config of the registered DEVICEs</a></li>";
@@ -247,6 +291,32 @@ function load_header(){
 	menu_phantom.innerHTML = menuhtml;
 	}
 }
+
+
+
+function app_load_header(){
+	var menu_phantom = document.getElementById("menu_phantom");
+	if(menu_phantom){
+	var menuhtml="<ul class=\"menuphantom\">";
+	menuhtml+="	<li class=\"menuphantom\"><a href=\"app_list.html\">List of registered APPs</a></li>";
+	menuhtml+="	<li class=\"menuphantom\"><a href=\"app_new.html\">Register new APP</a></li>";
+	menuhtml+="	<li class=\"menuphantom\"><a href=\"app_update.html\">Update an APP</a></li>";
+	menuhtml+="	<li class=\"menuphantom\"><a href=\"app_update1.json\">Download JSON example 1</a></li>";
+	menuhtml+="	<li class=\"menuphantom\"><a href=\"app_update2.json\">Download JSON example 2</a></li>";
+	menuhtml+="	<li class=\"menuphantom\"><a href=\"app_update3.json\">Download JSON example 3</a></li>";
+// <!--<li class="menuphantom"><a class="active" href="download_file.html">Download File</a></li>-->
+// <!--<li class="menuphantom"><a href="query_metadata.html">Query metadata</a></li> -->
+	menuhtml+="	<li class=\"phantomlogo\" style=\"float:right\">";
+	menuhtml+="	<img src=\"phantom.gif\" alt=\"PHANTOM\" height=\"32\" style=\"background-color:white;\">";
+	menuhtml+="	</li>";
+	menuhtml+="	<li class=\"menuphantomR\">";
+	menuhtml+="		<p><a onClick=\"app_logout();return false;\" href=\"PleaseEnableJavascript.html\">LogOut</a></p></li>";
+	menuhtml+="</ul>";
+	menu_phantom.innerHTML = menuhtml;
+	}
+}
+
+
 
 function load_footer(){
 	var foot_phantom = document.getElementById("foot_phantom");
@@ -261,12 +331,20 @@ function load_footer(){
 	}
 }
 
-function load_header_footer(){
-	load_header();
-	load_menu_login();
+function rm_load_header_footer(){
+	rm_load_header();
+	rm_load_menu_login();
 	load_footer();
 	checktoken();
 }
+
+function app_load_header_footer(){
+	app_load_header();
+	app_load_menu_login();
+	load_footer();
+	checktoken();
+}
+
 
 function applogin(user,password){
 	var demoreplaceb = document.getElementById("demoreplaceb");
@@ -284,7 +362,7 @@ function applogin(user,password){
 			if(demoreplaceb) demoreplaceb.innerHTML = "Error: "+ serverResponse;
 			console.log("Error: "+ serverResponse);
 			if(debug_phantom) debug_phantom.style.display = "block";
-			logout();
+			app_logout();
 			checktoken();
 		}
 	};
@@ -294,7 +372,7 @@ function applogin(user,password){
 
 
 
-function resourcelogin(user,password){
+function rm_login(user,password){
 	var demoreplaceb = document.getElementById("demoreplaceb");
 	var debug_phantom = document.getElementById("debug_phantom");
 	var menu_login = document.getElementById("menu_login");
@@ -311,9 +389,9 @@ function resourcelogin(user,password){
 			if(menu_login) menu_login.innerHTML = menuhtml;
 			if(menu_login) menu_login.style.display = "block";
 		}else{
-			logout();
+			rm_logout();
 // 			checktoken();
-			load_menu_login();
+			rm_load_menu_login();
 			if(menu_login) menu_login.style.display = "block";
 			var serverResponse = xhr.responseText;
 			if(menu_phantom) menu_phantom.style.display = "none";
@@ -325,7 +403,7 @@ function resourcelogin(user,password){
 	return false;
 }
 
-function execlogin(user,password){
+function exec_login(user,password){
 	var demoreplaceb = document.getElementById("demoreplaceb");
 	var debug_phantom = document.getElementById("debug_phantom");
 	var url = build_execman_path() +"/login?email="+user+"\&pw="+password+"";//?pretty='true'";
@@ -340,7 +418,7 @@ function execlogin(user,password){
 			var serverResponse = xhr.responseText;
 			if(demoreplaceb) demoreplaceb.innerHTML = "Error: "+ serverResponse;
 			if(debug_phantom) debug_phantom.style.display = "block";
-			logout();
+			exec_logout();
 			checktoken();
 		}
 	};
