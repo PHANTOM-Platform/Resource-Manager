@@ -607,22 +607,22 @@ app.get('/resourcemanager.html', function(req, res) {
 	var filePath = '../web-resourcemanager/resourcemanager.html';
 	retrieve_file(filePath,res);
 }); 
-//*******************************
+
 app.get('/resourcemanager.js', function(req, res) {
 	var filePath = '../web-resourcemanager/resourcemanager.js';
 	retrieve_file(filePath,res);
-}); 
-//*******************************
+});
+
 app.get('/device_new.html', function(req, res) {
 	var filePath = '../web-resourcemanager/device_new.html';
 	retrieve_file(filePath,res);
 });
-//*******************************
+
 app.get('/device_update.html', function(req, res) {
         var filePath = '../web-resourcemanager/device_update.html';
         retrieve_file(filePath,res);
-}); 
-//*******************************
+});
+
 app.get('/device_list.html', function(req, res) {
 	var filePath = '../web-resourcemanager/device_list.html';
 	retrieve_file(filePath,res);
@@ -652,18 +652,16 @@ app.get('/device_update_form.html', function(req, res) {
 	retrieve_file(filePath,res);
 });
 
-//*******************************
 app.get('/device_update1.json', function(req, res) {
 	var filePath = '../web-resourcemanager/device_update1.json';
 	retrieve_file(filePath,res);
 });
-//*******************************
+
 app.get('/mf_config1.json', function(req, res) {
 	var filePath = '../web-resourcemanager/mf_config1.json';
 	retrieve_file(filePath,res);
 });
 
-//*******************************
 app.get('/query_metadata.html', function(req, res) {
 	var filePath = 'web/query_metadata.html';
 	retrieve_file(filePath,res);
