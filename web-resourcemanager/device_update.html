@@ -23,34 +23,40 @@
 	<div id="menu_login" style="display:none"></div>
 
 	<div id="phantom_operation">
-			<h1><b>Update a Device</b></h1>
+		<h1><b>Update a Device</b></h1>
 
-			<hr><br>
-			<h2><b> Online formular: </b></h2>
-			<form ref='uploadForm'
-				id='uploadForm'
-				name="myForm" >
-				&emsp; Json File (REQUIRED) <input type="file" name="UploadJSON" id="UploadJSON" /><br>
-				<div class="center">
-				<input type="submit" onclick="return update_device_with_token( document.getElementById('UploadJSON') )" value="Register/Update Device" />
-				</div>
-			</form>
+		<hr> <h2><b> Online formular: </b></h2>
+		<form ref='uploadForm'
+			id='uploadForm'
+			name="myForm" >
+			&emsp; Json File (REQUIRED) <input type="file" name="UploadJSON" id="UploadJSON" /><br>
+			<div class="center">
+			<input type="submit" onclick="return update_device_with_token( document.getElementById('UploadJSON') )" value="Register/Update Device"/>
+			</div>
+		</form>
 
-			<hr><br><h2><b> Example of JSON file:<b></h2>
+		<hr><h2><b> Example of JSON file:<b></h2>
 			<ul style="list-style-type:disc">
 				<a href="device_update1.json">device_update1.json</a><br>
 			</ul>
 
-			<hr><br><h2><b> CAUTION:<b></h2>
+		<hr><h2><b> CAUTION:<b></h2>
 			<ul style="list-style-type:disc">
-				<li> An update <it>merges</it> the upload json with the already registered fields</li><br>
-				<li> Field names in the json must be lower-case </li><br>
+				<li> An update <it>merges</it> the upload json with the already registered fields</li>
+				<li> Field names in the json must be lower-case</li>
+				<li>The following characters are reserved in JSON and must be properly escaped to be used in strings (in other case they will prevent the correct parsing):<br>
+					&emsp; Backspace <span style="font-weight:normal"> has to be replaced with</span> \b<br>
+					&emsp; Form feed<span style="font-weight:normal"> has to be replaced with</span> \f<br>
+					&emsp; Newline<span style="font-weight:normal"> has to be replaced with</span> \n<br>
+					&emsp; Carriage return<span style="font-weight:normal"> has to be replaced with</span> \r<br>
+					&emsp; Tab<span style="font-weight:normal"> has to be replaced with</span> \t<br>
+					&emsp; Double quote<span style="font-weight:normal"> has to be replaced with</span> \"<br>
+					&emsp; Backslash<span style="font-weight:normal"> has to be replaced with</span> \\
+				</li>
 			</ul>
 	</div>
-	
-	<div id="debug_phantom" style="display:none">
-		<hr><p id="demoreplaceb"></p>
-	</div>
+
+	<div id="debug_phantom" style="display:none"> <hr><p id="demoreplaceb"></p> </div>
 
 	<div id="foot_phantom"></div>
 <script> rm_load_header_footer(); </script>

@@ -24,35 +24,32 @@
 	<div id="menu_login" style="display:none"></div>
 
 	<div id="phantom_operation">
-			<!-- <h1 sid="title_login" style="overflow-wrap:break-word; max-width:80%; word-break:break-all; ">  -->
-			<h1><b>Register EXTRICTLY an NEW Device (it will return error if already registered)</b> </h1>
+		<!-- <h1 sid="title_login" style="overflow-wrap:break-word; max-width:80%; word-break:break-all; ">  -->
+		<h1><b>Register EXTRICTLY an NEW Device (it will return error if already registered)</b> </h1>
 
-			<hr><br>
-			<h2><b> Online formular: </b></h2>
+		<hr> <h2><b> Online formular: </b></h2>
 
-			<form ref='uploadForm'
-				id='uploadForm'
-				name="myForm" >
-				&emsp; Json File (REQUIRED) <input type="file" name="UploadJSON" id="UploadJSON" /><br>
-				<div class="center">
-				<input type="submit" onclick="return upload_device_with_token( document.getElementById('UploadJSON') )" value="Register NEW Device" />
-				</div>
-			</form>
+		<form ref='uploadForm'
+			id='uploadForm'
+			name="myForm" >
+			&emsp; Json File (REQUIRED) <input type="file" name="UploadJSON" id="UploadJSON" /><br>
+			<div class="center">
+			<input type="submit" onclick="return upload_device_with_token( document.getElementById('UploadJSON') )" value="Register NEW Device"/>
+			</div>
+		</form>
 
-		<hr><br><h2><b> Example of JSON file:<b></h2>
+		<hr><h2><b> Example of JSON file:<b></h2>
 			<ul style="list-style-type:disc">
 				<a href="device_update1.json">device_update1.json</a><br>
 			</ul>
 
-			<hr><br><h2><b> CAUTION:<b></h2>
+		<hr><h2><b> CAUTION:<b></h2>
 			<ul style="list-style-type:disc">
-				<li> Field names in the json must be lower-case </li><br>
+				<li> Field names in the json must be lower-case</li>
 			</ul>
 	</div>
 
-	<div id="debug_phantom" style="display:none">
-		<hr><p id="demoreplaceb"></p>
-	</div>
+	<div id="debug_phantom" style="display:none"> <hr><p id="demoreplaceb"></p></div>
 
 	<div id="foot_phantom"></div>
 
