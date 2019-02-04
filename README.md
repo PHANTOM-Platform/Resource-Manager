@@ -1,6 +1,27 @@
 # Resource-Manager
 Server which keeps track of the Status of the Available hardware in the system
 
+## 1.- Introduction
+The PHANTOM Resource-MANAGER server is composed of two components: a web server (http://) and a WebSocket server (ws://). 
+The web server provides various functionalities for data query and data analysis via RESTful APIs with documents in JSON format. 
+The server's URL is "http://localhost:8600" by default.
+
+## 2.- Prerequisites
+The server is implemented using Node.js, and connects to Elasticsearch to store and access Metadata. 
+Before you start installing the required components, please note that the installation and setup steps mentioned below assume that you are running a current Linux as the operating system. 
+The installation was tested with Ubuntu 16.04 LTS.
+Before you can proceed, please clone the repository:
+
+```bash
+git clone https://github.com/PHANTOM-Platform/Resource-Manager.git;
+```
+
+**OR** alternatively, if you prefer to use **svn** instead of git:
+
+```bash
+svn export https://github.com/PHANTOM-Platform/Resource-Manager.git/trunk Resource-Manager;
+```
+
 ## Video: Examples of use
 
 There are some video tutorials available at Youtube and this channel:
