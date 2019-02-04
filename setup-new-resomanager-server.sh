@@ -9,7 +9,7 @@
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
 # 
-# 	http://www.apache.org/licenses/LICENSE-2.0
+# http://www.apache.org/licenses/LICENSE-2.0
 # 
 # Unless required by applicable law or agreed to in writing, software
 # distributed under the License is distributed on an "AS IS" BASIS,
@@ -21,21 +21,21 @@
 	port=8600;
 	server=localhost;
 	expectedserver="PHANTOM Resource Manager";
-	
+
 	app=`basename $0`;
 	SERVER_DIR=~/phantom_servers/;
 	BASE_DIR=`dirname $0`;
 	cd ${BASE_DIR};
-	#Set up an new database, 
-	#In case that already setup, it will not perform any change just only return an error on already existing DB. 
+	#Set up an new database,
+	#In case that already setup, it will not perform any change just only return an error on already existing DB.
 #0. #### Function Scripts definition ################################
 	verify_reponse()
-	{ 
+	{
 		# $1 server
 		# $2 port
 		# $3 expectedserver
 		echo "Checking Response on port ${2} ...";
-		let "j=0"; 
+		let "j=0";
 		if [ "$#" -lt 3 ]; then
 			echo "error missing parameters at function verify_response";
 			exit 1;
@@ -44,7 +44,7 @@
 		while [[ ${HTTP_STATUS} != "200" ]] && [ ${j} -lt 1 ] ; do 
 			let "j += 1 "; sleep 1; 
 			HTTP_STATUS=$(curl --silent --output /dev/null --write-out "%{http_code}" http://${1}:${2});
-		done; 
+		done;
 		if [[ ${HTTP_STATUS} != "200" ]]; then
 			echo "> Server is unreachable on port ${2}. Aborting.";
 			exit 1;
@@ -55,13 +55,13 @@
 			echo "> Server has not connection with the ElasticSearch server. Aborting.";
 			exit 1;
 		fi;
-		
+
 		# Look which kind of server is listening
 		SERVERNAME=$(curl --silent http://${1}:${2}/servername);
 		if [[ ${SERVERNAME} != ${3} ]]; then
 			echo " The server found is not a ${3} server. Aborting.";
 			echo ${SERVERNAME};
-			exit 1;			
+			exit 1;
 		fi;
 		echo "Done. Response successfully found on port ${2}.";
 		echo ;
@@ -83,14 +83,13 @@
 		user=${params%%	*};
 		userpw=${params#*	};
 		userpw=${userpw%% };
-		password=${userpw%%	};	
-		echo "name    is: \"${name}\""; 
+		password=${userpw%%	};
+		echo "name    is: \"${name}\"";
 		echo "user_id is: \"${user}\"";
-		echo "password is: \"${password}\"";
-		echo ;	
+		echo -e "password is: \"${password}\"\n";
 		curl -s -H "Content-Type: application/json" -XPOST http://${server}:${port}/signup?name="${name}"\&email="${user}"\&pw="${password}";
 		curl -s -XGET http://${server}:${port}/_flush > /dev/null;
 	done <"list_of_users.ini";
 	echo -e "done.\n";
-exit
-curl -s -H "Content-Type: application/json" -XPOST http://${server}:${port}/update_user?email="montana@abc.com"\&pw="124154151235";
+exit;
+# curl -s -H "Content-Type: application/json" -XPOST http://${server}:${port}/update_user?email="montana@abc.com"\&pw="124154151235";
