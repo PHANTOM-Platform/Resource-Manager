@@ -25,7 +25,6 @@ process.title = 'PHANTOM-Resource-Manager-server';
 	const SERVERNAME ='PHANTOM Resource Manager';
 	const SERVERPORT = 8600;
 	const SERVERDB = "resource_db";
-	
 	// This will be allocated in the home folder of the user running nodejs !! os.homedir()+File_Server_Path
 //******************** PACKAGES AND SOME GLOBAL VARIABLES ************
 	const express 		= require('express');
@@ -58,7 +57,7 @@ const devicemapping = {
 				"index": "analyzed"
 			},
 			"device_length":{
-				"type": "int"				
+				"type": "int"
 			},
 			"device_length": { // this field is registered for quering purposes
 				"type": "short"
@@ -101,10 +100,10 @@ const statusmapping = { //the idea is keep a single entry, the evolution of load
 		"properties": {
 			"device_id":{
 				"type": "string", //this is the id from the table devices
-				"index": "not_analyzed"				
+				"index": "not_analyzed"
 			},
 			"device_id_length":{
-				"type": "int"				
+				"type": "int"
 			},
 			"cpu_load": { // the used percentage of the cpu 
 				"type": "float"
@@ -139,19 +138,19 @@ const execsmapping = {
 				"index": "analyzed"
 			},
 			"app_length":{
-				"type": "int"				
+				"type": "int"
 			},
 			"device": { // the used percentage of the cpu 
 				"type": "string", //Example: NA, Nvidia GTX960
 				"index": "analyzed"
 			},
-			"start_timestamp": { //  
+			"start_timestamp": { //
 				"type": "date",
 				"store": "yes",
 				"format": "yyyy-MM-dd'T'HH:mm:ss.SSS",
 				"index": "analyzed"
 			},
-			"end_timestamp": { //  
+			"end_timestamp": { //
 				"type": "date",
 				"store": "yes",
 				"format": "yyyy-MM-dd'T'HH:mm:ss.SSS",
@@ -159,7 +158,7 @@ const execsmapping = {
 			},
 			"energy": { // as J
 				"type": "float"
-			}		
+			}
 		}
 	}
 };
@@ -170,7 +169,7 @@ const metadatamapping = {
 				"type": "string",
 				"index": "analyzed"
 			},
-			"path_length": { 
+			"path_length": {
 				"type": "short"
 			},
 			"user_owner": {//of the file, user_id is the user email
@@ -185,10 +184,10 @@ const metadatamapping = {
 				"type": "string",
 				"index": "analyzed"
 			},
-			"filename_length": { 
+			"filename_length": {
 				"type": "short"
 			}
-		} 
+		}
 	}
 };
 const usersmapping = {
@@ -232,7 +231,7 @@ const tokensmapping = {
 		}
 	}
 };
-const logsmapping = { 
+const logsmapping = {
 	"logs":{
 		"properties": {
 			"code": {
@@ -252,8 +251,7 @@ const logsmapping = {
 			}
 		}
 	}
-} ; 
-
+};
 	var expressWs = require('express-ws')(app);
 	var app = expressWs.app;
 //******************** VARIABLES FOR WSockets **********************
@@ -313,16 +311,16 @@ function lowercase(input_string){
 	var result="";
 	for (var j = 0; j < input_string.length; j++) {
 // 		input_string.replaceAt(j, character.toLowerCase());
-        var charCode = input_string.charCodeAt(j);
-        if (charCode < 65 || charCode > 90) {
-            // NOT an uppercase ASCII character
-            // Append the original character
-            result += input_string.substr(j, 1);
-        } else {
-            // Character in the ['A'..'Z'] range
-            // Append the lowercase character
-            result += String.fromCharCode(charCode + 32);
-        }
+		var charCode = input_string.charCodeAt(j);
+		if (charCode < 65 || charCode > 90) {
+			// NOT an uppercase ASCII character
+			// Append the original character
+			result += input_string.substr(j, 1);
+		} else {
+			// Character in the ['A'..'Z'] range
+			// Append the lowercase character
+			result += String.fromCharCode(charCode + 32);
+		}
 	}
 	return (result);
 }
@@ -357,7 +355,7 @@ function consolelogjson(JSONstring ){
 		console.log("pos: " + jsonobj.indexOf(labeltxt));
 	}
 }
-//*********************************************************************	
+//*********************************************************************
 //the purpose is to remove the fields/properties path,path_length, filename,filename_length, if present.
 //and generate thos fields/properties from the input parameters
 function update_filename_path_on_json(JSONstring, project,source, filename, path){
@@ -539,13 +537,12 @@ function get_source_project_json(JSONstring){
 	}
 	return myres;
 }
-//*********************************************************************	
-// function generate_json_example(){ 
+//*********************************************************************
+// function generate_json_example(){
 // 	var Employee = {
 // 		firstname: "Pedro",
 // 		lastname: "Picapiedra"
 // 	}
-// 	console.log(Employee);
 // 	delete Employee.firstname; //delete one property
 // 	var label='age';
 // 	Employee[label]="32"; //add one property
@@ -724,6 +721,12 @@ app.get('/device_list.html', function(req, res) {
 	var filePath = '../web-resourcemanager/device_list.html';
 	retrieve_file(filePath,res);
 });
+
+app.get('/log_list.html', function(req, res) {
+	var filePath = '../web-resourcemanager/log_list.html';
+	retrieve_file(filePath,res);
+});
+
 app.get('/device_mf_config_form.html', function(req, res) {
 	var filePath = '../web-resourcemanager/device_mf_config_form.html';
 	retrieve_file(filePath,res);
@@ -1768,9 +1771,9 @@ app.post('/signup', function(req, res) {
 		resultlog = LogsModule.register_log( es_servername+":"+es_port,SERVERDB,400,req.connection.remoteAddress,"SIGNUP Bad Request, Empty Email",currentdate,"");
 		return;
 	}
-	console.log("[LOG]: REGISTER USER+PW");
+	console.log("[LOG]: REGISTER USER+PW ");
 	console.log("   " +colours.FgYellow + colours.Bright + " user: " + colours.Reset + email );
-	console.log("   " +colours.FgYellow + colours.Bright + " request from IP: " + req.connection.remoteAddress + colours.Reset);
+	console.log("   " +colours.FgYellow + colours.Bright + " request from IP: " + req.connection.remoteAddress + colours.Reset+"\n");
 	if(( req.connection.remoteAddress!= ips[0] ) &&( req.connection.remoteAddress!=ips[1])&&( req.connection.remoteAddress!=ips[2])){
 		console.log(" ACCESS DENIED from IP address: "+req.connection.remoteAddress);
 		var messagea = "REGISTER USER '"+ email + "' FORBIDDEN access from external IP";
