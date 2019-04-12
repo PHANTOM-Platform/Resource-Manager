@@ -12,10 +12,23 @@
 	<meta name="robots" content="noindex">
 	<meta name="googlebot" content="noindex">
 	<meta charset="utf-8">
-	<title>PHANTOM RESOURCE-MANAGER</title>
+<!-- 	<meta http-equiv="refresh" content="1"> -->
+<title>PHANTOM RESOURCE-MANAGER</title>
 	<link rel="stylesheet" type="text/css" href="phantom.css">
 	<script src="resourcemanager.js"></script>
 </head>
+
+
+<script>
+var myVar = setInterval(myTimer ,1000);
+function myTimer() {
+	list_status_devices(25,document.getElementById('appname').value);
+	return 1;
+//   var d = new Date();
+//   document.getElementById("demo").innerHTML = d.toLocaleTimeString();
+}
+</script>
+
 
 <body onload="start_page_new()" id="body" ><!--class="light-mode"-->
 	<script>
@@ -40,10 +53,10 @@
 				DEVICE name (optional): <input type="text" name="appname" id="appname" value=""> leave empty if not wish to filter by name<br>
 				<input type="hidden" name="pretty" value="true">
 				<!-- upload button-->
-				<input type="submit" onclick="return list_status_devices(4,document.getElementById('appname').value)" value="ONLY list the name of the Devices" />
-				<input type="submit" onclick="return list_status_devices(1,document.getElementById('appname').value)" value="Show results in Table" />
-				<input type="submit" onclick="return list_status_devices(2,document.getElementById('appname').value)" value="Show results as JSON" />
-				<input type="submit" onclick="return list_status_devices(3,document.getElementById('appname').value)" value="Show raw reply from server" />
+				<input type="submit" onclick="clearInterval(myVar); return setInterval(myTimer ,1000)" value="SINGLE compact table" />
+				<input type="submit" onclick="clearInterval(myVar); return list_status_devices(1,document.getElementById('appname').value)" value="Show results in Separatated Tables" />
+				<input type="submit" onclick="clearInterval(myVar); return list_status_devices(2,document.getElementById('appname').value)" value="Show results as JSON" />
+				<input type="submit" onclick="clearInterval(myVar); return list_status_devices(3,document.getElementById('appname').value)" value="Show raw reply from server" />
 			</div>
 			</form>
 	</div>	
@@ -57,6 +70,16 @@
 	</div>
 
 	<div id="foot_phantom"></div>
-<script> rm_load_header_footer(); </script>
+<script> rm_load_header_footer();
+	var currentmode= localStorage.getItem('currentmode');
+	if(currentmode!=undefined){
+		var c = document.getElementById("foot_phantom").querySelectorAll("a");
+		for (i in c) {
+			c[i].className = currentmode;
+		}
+		//update it at last
+		document.getElementById("foot_phantom").className = currentmode;
+	}
+</script>
 </body>
 </html>

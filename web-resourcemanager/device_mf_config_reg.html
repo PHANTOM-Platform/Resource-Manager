@@ -57,6 +57,16 @@
 
 	<div id="foot_phantom"></div>
 
-<script> rm_load_header_footer(); </script>
+<script> rm_load_header_footer();
+	var currentmode= localStorage.getItem('currentmode');
+	if(currentmode!=undefined){
+		var c = document.getElementById("foot_phantom").querySelectorAll("a");
+		for (i in c) {
+			c[i].className = currentmode;
+		}
+		//update it at last
+		document.getElementById("foot_phantom").className = currentmode;
+	}
+</script>
 </body>
 </html>
