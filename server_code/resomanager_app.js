@@ -798,14 +798,14 @@ app.get('/drop_db', function(req, res) {
 	var currentdate = dateFormat(new Date(), "yyyy-mm-dd'T'HH:MM:ss.l");
 	console.log("\n[LOG]: Deleting Database");
 	console.log("   " +colours.FgYellow + colours.Bright + " request from IP:" + req.connection.remoteAddress + colours.Reset);
-// 	if(( req.connection.remoteAddress!= ips[0] ) &&( req.connection.remoteAddress!=ips[1])&&( req.connection.remoteAddress!=ips[2])){
-// 		console.log(" ACCESS DENIED from IP address: "+req.connection.remoteAddress);
-// 		res.writeHead(403, {"Content-Type": contentType_text_plain});
-// 		res.end("\n403: FORBIDDEN access from external IP.\n");
-// 		var messagea = "Deleting Database FORBIDDEN access from external IP.";
-// 		resultlog = LogsModule.register_log(es_servername+":"+es_port,SERVERDB, 403,req.connection.remoteAddress,messagea,currentdate,"");
-// 		return;
-// 	}
+	if(( req.connection.remoteAddress!= ips[0] ) &&( req.connection.remoteAddress!=ips[1])&&( req.connection.remoteAddress!=ips[2])){
+		console.log(" ACCESS DENIED from IP address: "+req.connection.remoteAddress);
+		res.writeHead(403, {"Content-Type": contentType_text_plain});
+		res.end("\n403: FORBIDDEN access from external IP.\n");
+		var messagea = "Deleting Database FORBIDDEN access from external IP.";
+		resultlog = LogsModule.register_log(es_servername+":"+es_port,SERVERDB, 403,req.connection.remoteAddress,messagea,currentdate,"");
+		return;
+	}
 	var searching = MetadataModule.drop_db(es_servername+":"+es_port, SERVERDB);
 	searching.then((resultFind) => {
 		res.writeHead(200, {"Content-Type": contentType_text_plain});
@@ -1056,6 +1056,106 @@ function register_device_json(req, res, new_device,jsontext){
 		return;
 	});
 }//register_device_json
+
+
+//********************************************************** 
+/**
+* input: req.files.UploadJSON is the json to parse
+* input: req.connection.remoteAddress, only used for register logs
+* if the json valid then registers it in the db: clientb.update
+*/
+function register_status_json(req, res, new_device,jsontext){
+	"use strict";
+	var currentdate = dateFormat(new Date(), "yyyy-mm-dd'T'HH:MM:ss.l");
+	var resultlog;
+	if (jsontext == undefined){
+		res.writeHead(400, { 'Content-Type': contentType_text_plain });
+		res.end('Error Json not found.');
+		resultlog = LogsModule.register_log(es_servername + ":" + es_port,SERVERDB, 400,req.connection.remoteAddress,'Error Json file not found.',currentdate,res.user);
+		return;
+	}
+	//1 Parse the JSON and find the device name.
+	//2 If not existing in the db, then we will just register the JSON content
+	//3 if already exists, we need to merge with the existing entries, updating those fields redefined in the json
+	var devicename= get_value_json(jsontext,"host"); //(1) parsing the JSON
+	var type_metric= get_value_json(jsontext,"type"); //(1) parsing the JSON
+	
+ 
+	
+	devicename=devicename.value;
+		type_metric=type_metric.value;
+	jsontext =update_device_length_on_json(jsontext, devicename); //this adds the field device.length
+// 	console.log("send_device_update_to_suscribers("+devicename+")");
+	send_device_update_to_suscribers(devicename,jsontext);
+	var result_count = DeviceModule.query_count_status_device(es_servername + ":" + es_port,SERVERDB, devicename,type_metric);  //<<-host value **************************
+	result_count.then((resultResolve) => {
+		if(resultResolve==0){//new entry (2) we resister new entry
+			var result = DeviceModule.register_json(es_servername + ":" + es_port,SERVERDB, jsontext,req.connection.remoteAddress,'status');
+			result.then((resultResolve) => {
+				resultlog = LogsModule.register_log(es_servername + ":" + es_port,SERVERDB, 200,req.connection.remoteAddress,"Add task Succeed",currentdate,res.user);
+				res.writeHead(resultResolve.code, {"Content-Type": contentType_text_plain});
+				res.end(resultResolve.text + "\n", 'utf-8');
+			},(resultReject)=> {
+				res.writeHead(resultReject.code, {"Content-Type": contentType_text_plain});
+				res.end(resultReject.text + "\n", 'utf-8');
+				resultlog = LogsModule.register_log( es_servername + ":" + es_port,SERVERDB,400,req.connection.remoteAddress,"Upload Error",currentdate,res.user);
+			});
+			return;
+		}else if (new_device==true){
+			res.writeHead(400, {"Content-Type": contentType_text_plain});
+			res.end("[ERROR] Can not register as new DEVICE, because there is an alredy registered DEVICE with that name\n", 'utf-8');
+			return;
+		}else{ //already existing, (3.1) first we get the registered json
+			var result_id = DeviceModule.find_status_device_id(es_servername + ":" + es_port,SERVERDB, devicename,type_metric);//<<-host value **************************
+			result_id.then((result_idResolve) => {
+				var elasticsearch = require('elasticsearch');
+				var clientb = new elasticsearch.Client({
+					host: es_servername + ":" + es_port,
+					log: 'error'
+				});
+				var algo= new Promise( (resolve,reject) => {
+					var mergejson = JSON.parse(jsontext);
+					clientb.update({//index replaces the json in the DB with the new one
+						index: SERVERDB,
+						type: 'status',
+						id: result_idResolve,
+						body: {doc: mergejson}
+					}, function(error, response) {
+						if(error){
+							reject (error);
+						} else if(!error){
+							var verify_flush = CommonModule.my_flush( req.connection.remoteAddress ,es_servername + ":" + es_port,SERVERDB);
+							verify_flush.then((resolve_result) => {
+								resolve ("Succeed");
+							},(reject_result)=> {
+								reject ( );
+							});
+						}
+					});//end query client.index
+				});
+				algo.then((resultResolve) => {
+					res.writeHead(200, {"Content-Type": contentType_text_plain});
+					res.end( "Succeed.", 'utf-8');
+					return;
+				},(resultReject)=> {
+					res.writeHead(400, {"Content-Type": contentType_text_plain});
+					res.end( "error: "+resultReject, 'utf-8');
+					return;
+				});
+			},(result_idReject)=> {
+				res.writeHead(400, {"Content-Type": contentType_text_plain});
+				res.end( "error requesting id", 'utf-8');
+				return;
+			});
+		}
+	},(resultReject)=> {
+		res.writeHead(400, {"Content-Type": contentType_text_plain});
+		res.end(resultReject + "\n", 'utf-8'); //error counting projects in the DB
+		resultlog = LogsModule.register_log( es_servername + ":" + es_port,SERVERDB,400,req.connection.remoteAddress,"ERROR on Update-register device", currentdate, res.user);
+		return;
+	});
+}//register_status_json
+
 
 
 //********************************************************** 
@@ -1373,6 +1473,26 @@ app.post('/register_new_device',middleware.ensureAuthenticated, function(req, re
 app.post('/update_device',middleware.ensureAuthenticated, function(req, res) { //this is for the table devices, all the info is in a JSON file, will update and merge with existing fields
 	register_device(req, res,false);
 });
+
+//from the webpage providing JSON parameter
+app.post('/update_device_json', function(req, res) { //this is for the table devices, all the info is in a JSON file, will update and merge with existing fields
+	"use strict";
+	var currentdate = dateFormat(new Date(), "yyyy-mm-dd'T'HH:MM:ss.l");
+	var message_bad_request = "UPLOAD Bad Request missing ";
+// 	console.log("body is " +JSON.stringify(req.body));
+	register_device_json(req, res, false ,JSON.stringify(req.body));
+});
+
+
+//from the webpage providing JSON parameter
+app.post('/update_status_json', function(req, res) { //this is for the table devices, all the info is in a JSON file, will update and merge with existing fields
+	"use strict";
+	var currentdate = dateFormat(new Date(), "yyyy-mm-dd'T'HH:MM:ss.l");
+	var message_bad_request = "UPLOAD Bad Request missing ";
+// 	console.log("body is " +JSON.stringify(req.body));
+	register_status_json(req, res, false ,JSON.stringify(req.body));
+});
+
 //********************************************************** 
 // //from the webpage providing JSON file.
 // app.post('/	',middleware.ensureAuthenticated, function(req, res) { //this is for the table devices_status
@@ -1521,7 +1641,7 @@ app.get('/query_device',middleware.ensureAuthenticated, function(req, res) {
 // 	});
 // });
 //**********************************************************
-app.get('/query_device_status',middleware.ensureAuthenticated, function(req, res) {
+app.get('/query_device_status',function(req, res) { //aqui mr middleware.ensureAuthenticated, 
 	var currentdate	= dateFormat(new Date(), "yyyy-mm-dd'T'HH:MM:ss.l");
 	var pretty 		= find_param(req.body.pretty, req.query.pretty);
 	var devicename	= find_param(req.body.device, req.query.device);
@@ -1851,14 +1971,14 @@ app.post('/signup', function(req, res) {
 	console.log("[LOG]: REGISTER USER+PW ");
 	console.log("   " +colours.FgYellow + colours.Bright + " user: " + colours.Reset + email );
 	console.log("   " +colours.FgYellow + colours.Bright + " request from IP: " + req.connection.remoteAddress + colours.Reset+"\n");
-// 	if(( req.connection.remoteAddress!= ips[0] ) &&( req.connection.remoteAddress!=ips[1])&&( req.connection.remoteAddress!=ips[2])){
-// 		console.log(" ACCESS DENIED from IP address: "+req.connection.remoteAddress);
-// 		var messagea = "REGISTER USER '"+ email + "' FORBIDDEN access from external IP";
-// 		resultlog = LogsModule.register_log( es_servername+":"+es_port,SERVERDB,403,req.connection.remoteAddress,messagea,currentdate,"");
-// 		res.writeHead(403, {"Content-Type": contentType_text_plain});
-// 		res.end("\n403: FORBIDDEN access from external IP.\n");
-// 		return;
-// 	}
+	if(( req.connection.remoteAddress!= ips[0] ) &&( req.connection.remoteAddress!=ips[1])&&( req.connection.remoteAddress!=ips[2])){
+		console.log(" ACCESS DENIED from IP address: "+req.connection.remoteAddress);
+		var messagea = "REGISTER USER '"+ email + "' FORBIDDEN access from external IP";
+		resultlog = LogsModule.register_log( es_servername+":"+es_port,SERVERDB,403,req.connection.remoteAddress,messagea,currentdate,"");
+		res.writeHead(403, {"Content-Type": contentType_text_plain});
+		res.end("\n403: FORBIDDEN access from external IP.\n");
+		return;
+	}
 	var result = UsersModule.register_new_user(es_servername+":"+es_port,SERVERDB, name, email, pw);
 	result.then((resultreg) => {
 		var messageb = "REGISTER USER '"+ email + "' GRANTED";
@@ -1923,13 +2043,13 @@ app.post('/update_user', function(req, res) {
 		resultlog = LogsModule.register_log(es_servername+":"+es_port,SERVERDB, 400,req.connection.remoteAddress,"SIGNUP Bad Request, Empty Email",currentdate,"");
 		return;
 	}
-// 	if(( req.connection.remoteAddress!= ips[0] ) &&( req.connection.remoteAddress!=ips[1])&&( req.connection.remoteAddress!=ips[2])){
-// 		var messagea = "REGISTER USER '"+ email + "' FORBIDDEN access from external IP";
-// 		resultlog = LogsModule.register_log(es_servername+":"+es_port,SERVERDB, 403,req.connection.remoteAddress,messagea,currentdate,"");
-// 		res.writeHead(403, {"Content-Type": contentType_text_plain});
-// 		res.end("\n403: FORBIDDEN access from external IP.\n");
-// 		return;
-// 	}
+	if(( req.connection.remoteAddress!= ips[0] ) &&( req.connection.remoteAddress!=ips[1])&&( req.connection.remoteAddress!=ips[2])){
+		var messagea = "REGISTER USER '"+ email + "' FORBIDDEN access from external IP";
+		resultlog = LogsModule.register_log(es_servername+":"+es_port,SERVERDB, 403,req.connection.remoteAddress,messagea,currentdate,"");
+		res.writeHead(403, {"Content-Type": contentType_text_plain});
+		res.end("\n403: FORBIDDEN access from external IP.\n");
+		return;
+	}
 	var result = UsersModule.update_user(es_servername+":"+es_port,SERVERDB, name, email, pw);
 	result.then((resultreg) => {
 		var messageb = "UPDATE USER '"+ email + "' GRANTED";
