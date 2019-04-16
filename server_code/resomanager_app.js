@@ -708,6 +708,11 @@ app.get('/resourcemanager.html', function(req, res) {
 	retrieve_file(filePath,res);
 }); 
 
+app.get('/phantom.js', function(req, res) {
+	var filePath = '../web-resourcemanager/phantom.js';
+	retrieve_file(filePath,res);
+});
+
 app.get('/resourcemanager.js', function(req, res) {
 	var filePath = '../web-resourcemanager/resourcemanager.js';
 	retrieve_file(filePath,res);
