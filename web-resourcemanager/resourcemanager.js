@@ -45,16 +45,13 @@ function rm_load_menu_login(){
 	menuhtml+="		Password: <input type=\"password\" name=\"password\" id=\"password\" value=\"\" autocomplete=\"off\"> <br>";
 	menuhtml+="		<input type=\"hidden\" name=\"pretty\" value=\"true\" />";
 	menuhtml+="		<input type=\"submit\" onclick=\" rm_login(document.getElementById('user').value, document.getElementById('password').value); return false;\" value=\"LOGIN\" />";
-	menuhtml+="	</div>";
-	menuhtml+="</form>";
+	menuhtml+="	</div></form>";
 	menu_login.innerHTML = menuhtml;
 	return true;
 	}else{
 		return false;
 	}
-}	
-
-
+}
 
 function rm_load_header(){
 	var menu_phantom = document.getElementById("menu_phantom");
@@ -85,8 +82,6 @@ function rm_load_header(){
 	menu_phantom.innerHTML = menuhtml;
 	}
 }
-
-
 
 function rm_load_header_footer(){
 	rm_load_header();
@@ -126,12 +121,8 @@ function rm_login(user,password){
 	xhr.send(null);
 	return false;
 }
-
-
-
+ 
 function jsontotable_rm_brief(myjson,count,first,level,lastwascoma,mtitle,filtered_fields){
-//ponemos en columnas: [host] [type] [local_timestamp] [cpu_usage_rate] [ram_usage_rate] [swap_usage_rate] [net_throughput] [io_throughput] + others
-	
 	var html ="";
 	var i;
 // 	if(first==true){ html ="{"; }
@@ -139,24 +130,19 @@ function jsontotable_rm_brief(myjson,count,first,level,lastwascoma,mtitle,filter
 	if(mtitle==true){
 		html += "<div><table style='border:1px solid black'>\n";// style='width:100%'>";
 		html += "<th align=\"center\"><strong>&nbsp; Host &nbsp;</strong> </th>\n";
-// 		html += "<td><strong>&nbsp; Type &nbsp;</strong></td>\n";
 		html += "<td colspan=\"2\" align=\"center\"><strong>&nbsp; TimeStamp&nbsp;</strong></td>\n";
-		html += "<td><strong>&nbsp; cpu_usage_rate &nbsp;</strong></td>\n";
-		html += "<td><strong>&nbsp; ram_usage_rate&nbsp;</strong></td>\n";
-		html += "<td><strong>&nbsp; swap_usage_rate &nbsp;</strong></td>\n";
-		html += "<td><strong>&nbsp; net_throughput &nbsp;</strong></td>\n";
-		html += "<td><strong>&nbsp; io_throughput &nbsp;</strong></td>\n";
+		html += "<td><strong>&nbsp;cpu_usage_rate &nbsp;</strong></td>\n";
+		html += "<td><strong>&nbsp;ram_usage_rate&nbsp;</strong></td>\n";
+		html += "<td><strong>&nbsp;swap_usage_rate &nbsp;</strong></td>\n";
+		html += "<td><strong>&nbsp;net_throughput &nbsp;</strong></td>\n";
+		html += "<td><strong>&nbsp;io_throughput &nbsp;</strong></td>\n";
 		html += "<td><strong>&nbsp;gpu_power_consumption &nbsp;</strong></td>\n";
 		count++;
 	}
 	var countseries=0;
 	myjson.forEach(function(val) {
 // 		if (count != 1 && lastwascoma==false) {
-// 			if(countseries==0) {
-// 				html += ",<br>";
-// 			}else{
-// 				html += "<br>},{<br>";
-// 			}
+// 			html += (countseries==0) ? ",<br>" : "<br>},{<br>";
 // 		};//this is not the first element
 		lastwascoma=true;
 		var keys = Object.keys(val);
@@ -184,103 +170,46 @@ function jsontotable_rm_brief(myjson,count,first,level,lastwascoma,mtitle,filter
 // 						html += "<td> " + val['_id'] +" </td>\n";
 // 						html += "<th> &nbsp;" + val['project'] +"&nbsp; </th>\n";
 						//source
-						if(val['host']!=undefined){
-// 							if(val['source']['host']==undefined){
-// 								html += "<td bgcolor=\"#f3ff3a\">";
-// 								val['source']['host']="waiting";
-// 							}else if(val['source']['host']=="waiting"){ //yellow
-// 								html += "<td bgcolor=\"#f3ff3a\">";
-// 							}else if(val['source']['host']=="finished"){//green
-// 								html += "<td bgcolor=\"#00FF00\">";
-// 							}else if(val['source']['host']=="cancelled"){//red
-// 								html += "<td bgcolor=\"#ff3e29\">";
-// 							}else if(val['source']['host']=="started"){//green
-// 								html += "<td bgcolor=\"#00FF00\">";
-// 							}else{
-// 								html += "<td>";
-// 							}
-							html += "<th><font color=\"white\">&nbsp;" + val['host'];
-						}else{
-							html += "<th bgcolor=\"#f3ff3a\"><font >&nbsp;...";
-						}
+						html += (val['host']!=undefined) ? "<th><font color=\"white\">&nbsp;" + val['host'] :
+							"<th bgcolor=\"#f3ff3a\"><font >&nbsp;...";
 						html += "&nbsp;</font></th>\n";
-						//type
-// 						if(val['type']!=undefined){ 
-// 							html += "<td><font >&nbsp;" + val['type'];
-// 						}else{
-// 							html += "<td bgcolor=\"#f3ff3a\"><font >&nbsp;...";
-// 						}
 						//local_timestamp
-						if(val['local_timestamp']!=undefined){ 
-							html += "<td align=\"right\"><font>&nbsp;" + val['local_timestamp'];
-						}else{
-							html += "<td bgcolor=\"#f3ff3a\" align=\"right\"><font >&nbsp;...";
-						}
-						html += "&nbsp;</font></td>\n";
+						html += "<td align=\"right\"><font>&nbsp;";
+						html += (val['local_timestamp']!=undefined) ? val['local_timestamp'] : "NA";
+						html += "</td><td align=\"right\"><font>&nbsp;";
 
-						if(val['local_timestamp']!=undefined){ 
-							html += "<td align=\"right\"><font>&nbsp;" + calculate_date(1000000*val['local_timestamp']);
-						}else{
-							html += "<td bgcolor=\"#f3ff3a\" align=\"right\"><font >&nbsp;...";
-						}
+						html += (val['local_timestamp']!=undefined) ? calculate_date(1000000*val['local_timestamp']) : "NA";
 						html += "&nbsp;</font></td>\n";
 						//CPU_usage_rate
-						if(val['cpu_usage_rate']!=undefined){ 
-							html += "<td align=\"right\"><font>&nbsp;"+val['cpu_usage_rate'];
-						}else if(val['CPU_usage_rate']!=undefined){
-							html += "<td align=\"right\"><font>&nbsp;"+val['CPU_usage_rate'];
-						}else{
-							html += "<td bgcolor=\"#f3ff3a\" align=\"right\"><font >&nbsp;...";
-						}
+						html += "<td align=\"right\"><font>&nbsp;";
+						html += (val['cpu_usage_rate']!=undefined) ? val['cpu_usage_rate'] : (val['CPU_usage_rate']!=undefined) ? val['CPU_usage_rate'] : "NA";
 						html += "&nbsp;%&nbsp;</font></td>\n";
 
 						//ram_usage_rate
-						if(val['ram_usage_rate']!=undefined){ 
-							html += "<td align=\"right\"><font>&nbsp;"+val['ram_usage_rate'];
-						}else if(val['RAM_usage_rate']!=undefined){
-							html += "<td align=\"right\"><font >&nbsp;"+val['RAM_usage_rate'];
-						}else{
-							html += "<td bgcolor=\"#f3ff3a\" align=\"right\"><font >&nbsp;...";
-						}
+						html += "<td align=\"right\"><font>&nbsp;";
+						html += (val['ram_usage_rate']!=undefined) ? val['ram_usage_rate'] : (val['RAM_usage_rate']!=undefined) ? val['RAM_usage_rate'] : "NA";
 						html += "&nbsp;%&nbsp;</font></td>\n";
 
 						//swap_usage_rate
-						if(val['swap_usage_rate']!=undefined){
-							html += "<td align=\"right\"><font>&nbsp;"+val['swap_usage_rate'];
-						}else{
-							html += "<td bgcolor=\"#f3ff3a\"><font >&nbsp;...";
-						}
-						html += "&nbsp;</font></td>\n";
+						html += (val['swap_usage_rate']!=undefined) ? "<td align=\"right\"><font>&nbsp;" + val['swap_usage_rate'] + "&nbsp;%&nbsp;</font>" : 
+							"<td bgcolor=\"#292929\" align=\"center\">NA";
+						html += "</td>\n";
 
 						//net_throughput
-						if(val['net_throughput']!=undefined){ 
-							html += "<td align=\"right\"><font>&nbsp;"+val['net_throughput'];
-						}else{
-							html += "<td bgcolor=\"#f3ff3a\" align=\"right\"><font >&nbsp;...";
-						}
-						html += "&nbsp;</font></td>\n";
+						html += (val['net_throughput']!=undefined) ? "<td align=\"right\"><font>&nbsp;" + val['net_throughput'] + "&nbsp;</font>" : 
+							"<td bgcolor=\"#292929\" align=\"center\">NA";
+						html += "</td>\n";
 
 						//io_throughput
-						if(val['io_throughput']!=undefined){ 
-							html += "<td align=\"right\"><font>&nbsp;"+val['io_throughput'];
-						}else{
-							html += "<td bgcolor=\"#f3ff3a\" align=\"right\"><font >&nbsp;...";
-						}
-						html += "&nbsp;</font></td>\n";
-
+						html += (val['io_throughput']!=undefined) ? "<td align=\"right\"><font>&nbsp;" + val['io_throughput'] + "&nbsp;</font>" : 
+							"<td bgcolor=\"#292929\" align=\"center\">NA";
+						html += "</td>\n";
 						
 						//gpu_power_consumption
-						if(val['gpu_power_consumption']!=undefined){ 
-							html += "<td align=\"right\"><font>&nbsp;"+val['gpu_power_consumption'];
-						}else{
-							html += "<td bgcolor=\"#f3ff3a\" align=\"right\"><font >&nbsp;...";
-						}
-						html += "&nbsp;</font></td>\n";
-						
-						
-						
-						
-						
+						html += (val['gpu_power_consumption']!=undefined) ? "<td align=\"right\"><font>&nbsp;" + val['gpu_power_consumption'] + "&nbsp;</font>" : 
+							"<td bgcolor=\"#292929\" align=\"center\">NA";
+						html += "</td>\n";
+
 						mtitle=false;
 						count++;
 						lastwascoma=false;
@@ -296,7 +225,6 @@ function jsontotable_rm_brief(myjson,count,first,level,lastwascoma,mtitle,filter
 // 						html += "<td><strong>\"" + key +"\"</strong>: \"" + val[key] +"\"</td>\n";
 // 						count++;
 // 						lastwascoma=false;
-
 				}
 // 			}else if (getType(val[key]) == "array" || getType(val[key]) == "object" ) {
 // 				if(key!= "component_stats"){
@@ -309,12 +237,10 @@ function jsontotable_rm_brief(myjson,count,first,level,lastwascoma,mtitle,filter
 // 							html += "</table></div></td><br>\n";
 // 							html += "<div><table style='border:1px solid black'>\n";// style='width:100%'>";
 // 						}
-// 						html += "<tr><th><strong>\"" + key + "\"</strong>: </th>\n";
-// 						
-// 						mtitle=false;
-// 					}else{
-// 						html += "<tr><td><strong>\"" + key + "\"</strong>: </td>\n";
 // 					}
+// 					html += (mtitle==true) ? "<tr><th><strong>\"" + key + "\"</strong>: </th>\n" :
+// 						"<tr><td><strong>\"" + key + "\"</strong>: </td>\n";
+// 					mtitle=false;
 // 					count++;
 // 					lastwascoma=false;
 // 					html += "<td><div><table style='width:100%; border:0px solid black'>\n";// style='width:100%'>";
@@ -350,11 +276,7 @@ function jsontotable_only_device_names(myjson,count,first,level,lastwascoma,mtit
 	var countseries=0;
 	myjson.forEach(function(val) {
 // 		if (count != 1 && lastwascoma==false) {
-// 			if(countseries==0) {
-// 				html += ",<br>";
-// 			}else{
-// 				html += "<br>},{<br>";
-// 			}
+// 			html += (countseries==0) ? ",<br>" : "<br>},{<br>";
 // 		};//this is not the first element
 		lastwascoma=true;
 		var keys = Object.keys(val);
@@ -377,7 +299,7 @@ function jsontotable_only_device_names(myjson,count,first,level,lastwascoma,mtit
 // 							html += "<div><table style='border:1px solid black'>\n";// style='width:100%'>";
 // 						}
 						if ((count==1) || ((count>1) && (previous_val_key!=val[key]))){
-						html += "<tr><th><strong>\""+ key +"\"</strong>: \"" + val[key] +"\"</th></tr>\n";
+							html += "<tr><th><strong>\""+ key +"\"</strong>: \"" + val[key] +"\"</th></tr>\n";
 						}
 						previous_val_key=val[key];
 						mtitle=false;
@@ -392,12 +314,9 @@ function jsontotable_only_device_names(myjson,count,first,level,lastwascoma,mtit
 // 					for (i = 0; i < level; i++) {
 // 						if (count != 1) html += '&emsp;';
 // 					}
-// 					if(mtitle==true){
-// 						html += "<tr><th><strong>\"" + key + "\"</strong>: </th>\n";
-// 						mtitle=false;
-// 					}else{
-// 						html += "<tr><td><strong>\"" + key + "\"</strong>: </td>\n";
-// 					}
+// 					html += (mtitle==true) ? "<tr><th><strong>\"" + key + "\"</strong>: </th>\n" :
+// 						"<tr><td><strong>\"" + key + "\"</strong>: </td>\n";
+// 					mtitle=false;
 // 					count++;
 					lastwascoma=false;
 // 					html += "<td><div><table style='width:100%; border:0px solid black'>\n";// style='width:100%'>";
@@ -431,15 +350,11 @@ function list_mf_config_devices(mytype,devicename){
 	return false;
 }
 
-
-
-
 function upload_device_with_token( UploadJSON ) {
 	var url=build_resource_path()+"/register_new_device";
 	upload_with_token( UploadJSON ,url);
 	return false;
 }
-
  
 function update_device_with_token( UploadJSON ) {
 	var url=build_resource_path()+"/update_device";
@@ -452,5 +367,3 @@ function list_devices(mytype,devicename){
 	list_results(mytype,url,["device"],["_length"]);
 	return false;
 }
-
-
