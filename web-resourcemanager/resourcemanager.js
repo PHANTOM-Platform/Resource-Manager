@@ -367,3 +367,11 @@ function list_devices(mytype,devicename){
 	list_results(mytype,url,["device"],["_length"]);
 	return false;
 }
+
+
+function list_resource_logs(mytype,execid){
+	var url = build_resource_path() + "/get_log_list?sorttype="+mytype+"&pretty='true'";
+	list_results(mytype,url,["host"],["_length","_index","_type","_score","sort"]);
+	return false;
+}
+
