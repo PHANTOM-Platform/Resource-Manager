@@ -161,6 +161,34 @@ find_device_id: function(es_server, my_index, device){
 			}
 		});
 	});
+},//****************************************************
+//This function is used to confirm that a device exists or not in the DataBase.
+//We first counted if existence is >0
+find_status_device_id: function(es_server, my_index, device,type_metric){
+	const my_type = 'status';
+	return new Promise( (resolve,reject) => {
+		var elasticsearch = require('elasticsearch');
+		var client = new elasticsearch.Client({
+			host: es_server,
+			log: 'error'
+		});
+		client.search({
+			index: my_index,
+			type: my_type,
+			body: {
+				"query":{"bool":{"must":[
+					{"match_phrase":{"host": device }}, {"term":{"host_length": device.length}},
+					{"match_phrase":{"type": type_metric }}, {"term":{"type_length": type_metric.length}}
+				]}}
+			}
+		}, function(error, response) {
+			if (error) {
+				reject ("error: "+error);
+			}else{
+				resolve (CommonModule.remove_quotation_marks(JSON.stringify(response.hits.hits[0]._id)));
+			}
+		});
+	});
 },
 //****************************************************
 //This function is used to confirm that a device exists or not in the DataBase.
@@ -365,6 +393,56 @@ query_count_device: function(es_server, my_index, device){
 		}
 	});
 }, //end query_count_device
+
+//This function is used to confirm that an user exists or not in the DataBase.
+query_count_status_device: function(es_server, my_index, device, type_metric){
+	const my_type = 'status';
+	return new Promise( (resolve,reject) => {
+		var elasticsearch = require('elasticsearch');
+		var client = new elasticsearch.Client({
+			host: es_server,
+			log: 'error'
+		});
+		if(device==undefined){
+			resolve(0);
+		}else if(device.length==0){
+			client.count({
+				index: my_index,
+				type: my_type,
+				body:{"query":{"match_all": {} }}
+			}, function(error, response) {
+				if (error) {
+					reject (error);
+				}
+				if (response.count !== undefined) {
+					resolve (response.count);//size
+				}else{
+					resolve (0);//size
+				}
+			});
+		}else{
+			client.count({
+				index: my_index,
+				type: my_type,
+				body: {
+					"query":{"bool":{"must":[
+						{"match_phrase":{"host": device }}, {"term":{"host_length": device.length}},
+						{"match_phrase":{"type": type_metric }}, {"term":{"type_length": type_metric.length}}
+					]}}
+				}
+			}, function(error, response) {
+				if (error) {
+					reject (error);
+				}
+				if (response.count !== undefined) {
+					resolve (response.count);//size
+				}else{
+					resolve (0);//size
+				}
+			});
+		}
+	});
+}, //end query_count_status_device
 //****************************************************
 // //This function is used to confirm that an user exists or not in the DataBase.
 // query_count_mf_device: function(es_server, my_index, device_id){
@@ -538,10 +616,12 @@ query_device_status: function(es_server, my_index, device_id, pretty) {//<<<<<
 		var newalgo= new Promise( (resolve,reject) => {
 			var resultb="";
 			bodyquery= this.compose_query_status(device_id);//<<<<<
+// 			console.log(" index "+my_index+ " type " + my_type);
+// 			console.log("bodyquery "+ JSON.stringify (bodyquery));
 			client.search({
 				index: my_index,
 				type: my_type,
-				size: 10,
+				size: 1000,
 				body: bodyquery
 			},function (error, response, status) {
 				if (error){
