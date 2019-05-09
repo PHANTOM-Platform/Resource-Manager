@@ -817,11 +817,11 @@ app.get('/drop_db', function(req, res) {
 		res.end("200: "+resultFind+"\n");
 		//not register log here, because we can not register nothing after delete the DB !!!
 	},(resultReject)=> {
-// 		console.log("log: Bad Request: " + resultReject); 
+// 		console.log("log: Bad Request: " + resultReject);
 		res.writeHead(400, {"Content-Type": contentType_text_plain});
 		res.end("\n400: Bad Request "+resultReject+"\n");
 		//not register log here, because the error can be due not existing DB to be drop.
-	} );
+	});
 });
 
 //this function registers a list of mappings with a recursive set of promises
@@ -838,7 +838,7 @@ function register_next_mapping (arr_labels, arr_mappings, es_servername, es_port
 					resolve(next_resultFind);
 				},(next_resultReject)=> {
 					reject(next_resultReject);
-				} );
+				});
 			}else{
 				resolve(resultFind);
 			}
@@ -894,7 +894,7 @@ function request_device_id(devicename, remoteAddress){
 			var currentdate = dateFormat(new Date(), "yyyy-mm-dd'T'HH:MM:ss.l");
 			var result_count = DeviceModule.query_count_device(es_servername + ":" + es_port, SERVERDB, devicename);
 			result_count.then((resultResolve) => {
-				if(resultResolve==0){//new entry (2) we resister new entry 
+				if(resultResolve==0){//new entry (2) we resister new entry
 					var jsontext= {
 						"device": devicename,
 						"device_length": devicename.length,
@@ -905,7 +905,7 @@ function request_device_id(devicename, remoteAddress){
 						var result_id = DeviceModule.find_device_id(es_servername + ":" + es_port,SERVERDB, devicename);
 						result_id.then((result_idResolve) => {
 							resolve (result_idResolve);
-						},(result_idReject)=> {//error finding the device id 
+						},(result_idReject)=> {//error finding the device id
 							reject("error requesting id");
 						});
 					},(resultReject)=> {//error regsiterning the new devicename
@@ -1084,9 +1084,7 @@ function register_status_json(req, res, new_device,jsontext){
 	//3 if already exists, we need to merge with the existing entries, updating those fields redefined in the json
 	var devicename= get_value_json(jsontext,"host"); //(1) parsing the JSON
 	var type_metric= get_value_json(jsontext,"type"); //(1) parsing the JSON
-	
- 
-	
+
 	devicename=devicename.value;
 		type_metric=type_metric.value;
 	jsontext =update_device_length_on_json(jsontext, devicename); //this adds the field device.length
@@ -1229,10 +1227,10 @@ function get_value_mf_config(jsontext,label){
 							return(myvalue);
 // 							console.log(mylabel+" : "+myvalue);
 						}
-// 					}else if (getType(jsonobj[keys[i]]) == "array" ) {
+// 					}else if (getType(jsonobj[keys[i]]) == "array"){
 						//may something to do
-// 					}else if (getType(jsonobj[keys[i]]) == "object" ) {
-						//may something to do		
+// 					}else if (getType(jsonobj[keys[i]]) == "object"){
+						//may something to do
 					};
 				};
 				i_b++;
@@ -1448,14 +1446,13 @@ function register_device_status(req, res,new_device){
 app.post('/new_log', function(req, res) {
 	"use strict";
 	var currentdate = dateFormat(new Date(), "yyyy-mm-dd'T'HH:MM:ss.l");
-	var pretty		= find_param(req.body.pretty, req.query.pretty);
 	var log_code	= find_param(req.body.code, req.query.code);
 	var log_user	= find_param(req.body.user, req.query.user);
 	var log_ip		= find_param(req.body.ip, req.query.ip);
 	var log_message	= find_param(req.body.message, req.query.message);
 	if(log_code==undefined) log_code="";
 	if(log_user==undefined) log_user="";
-	if(log_ip==undefined) log_ip="";
+	if(log_ip==undefined) log_ip=req.connection.remoteAddress;
 	if(log_message==undefined) log_message="";
 	var resultlog = LogsModule.register_log(es_servername + ":" + es_port, SERVERDB, log_code, log_ip, log_message, currentdate, log_user);
 	resultlog.then((resolve_result) => {
