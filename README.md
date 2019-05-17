@@ -22,11 +22,19 @@ git clone https://github.com/PHANTOM-Platform/Resource-Manager.git;
 svn export https://github.com/PHANTOM-Platform/Resource-Manager.git/trunk Resource-Manager;
 ```
 
+## 3.- RESTful API Queries
+ 
+Please refer to the [Reference Manual of the RESTful API][apimanual] to get more details.
+The Manual contains a description of each of the implemented methods, with examples of use, and type of possible responses. 
+
+
+
 ## Video: Examples of use
 
 There are some video tutorials available at Youtube and this channel:
 
 [Youtube PHANTOM Channel][youtube_phantom_channel]
+
 
 ## Acknowledgment
 This project is realized through [EXCESS][excess] and [PHANTOM][phantom]. EXCESS is funded by the EU 7th Framework Programme (FP7/2013-2016) under grant agreement number 611183. The PHANTOM project receives funding under the European Union's Horizon 2020 Research and Innovation Programme under grant agreement number 688146.
@@ -41,8 +49,13 @@ This project is realized through [EXCESS][excess] and [PHANTOM][phantom]. EXCESS
 + [github/alexey-cheptsov](https://github.com/alexey-cheptsov)
 
 
+## Release History
+| Date        | Version   | Comment          |
+| ----------- | --------- | ---------------- |
+| 2019-05-15  | 1.0.0     | Tested with Real Use Cases  |
+
 ## License
-Copyright (C) 2014,2015 University of Stuttgart
+Copyright (C) 2018 University of Stuttgart
 
 [Apache License v2](LICENSE).
 
@@ -51,3 +64,4 @@ Copyright (C) 2014,2015 University of Stuttgart
 [server]: https://github.com/PHANTOM-Platform/Monitoring/tree/master/Monitoring_server
 [excess]: http://www.excess-project.eu
 [phantom]: http://www.phantom-project.org
+[apimanual]: https://phantom-platform.github.io/Resource-Manager/docs/
