@@ -83,6 +83,252 @@
   },
   {
     "type": "get",
+    "url": "/query_device",
+    "title": "Returns description of a device",
+    "version": "1.0.0",
+    "name": "query_device",
+    "group": "Access_to_register_of_devices",
+    "permission": [
+      {
+        "name": "user"
+      }
+    ],
+    "description": "<p>Registers the default monitoring configuration for a device which is provided in a file in JSON-data format.</p>",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "mytoken",
+            "description": "<p>the token.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "device",
+            "description": "<p>MANDATORY Device name for which is requested the hardware description.</p>"
+          }
+        ]
+      }
+    },
+    "examples": [
+      {
+        "title": "Example usage:",
+        "content": "curl -s -H \"Authorization: OAuth ${mytoken}\" -H \"Content-Type: multipart/form-data\" -XGET http://${server}:${port}/query_device?device=\"HLRS%20Raspberry%20pi3\"\n\nor alternatively use service at https when available SSL certificates.",
+        "type": "json"
+      }
+    ],
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "response",
+            "description": "<p>JSON structure</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Success response:",
+          "content": "HTTPS 200 OK\n {\"hits\" :[ {\"device\":\"HLRS Raspberry pi3\",\"device_length\":18,\n   \"cpu_type\":\"armv7\",\"cpu_type_length\":5,\n   \"cpu_cores\":4,\"ram_size_bytes\":1073741824,\n   \"gpu_type\":\"NA\",\"gpu_type_length\":2,\n   \"fpga_type\":\"NA\",\"fpga_type_length\":2,\"fpga_logic_gates\":0,\"hide\":\"false\",\"hide_length\":5,\n   \"ip\":\"192.168.0.55\",\"ip_length\":12,\n   \"mac\":\"00:11:22:33:44:55\",\"mac_length\":17}]\n }",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "fields": {
+        "Error 4xx": [
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "InvalidToken",
+            "description": "<p>Error message when the token is not valid</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Response (example):",
+          "content": "HTTP/1.1 400 Bad Request\n  missing device",
+          "type": "json"
+        }
+      ]
+    },
+    "filename": "/home/jmontana/apidocs/server_code/resomanager_app.js",
+    "groupTitle": "Access_to_register_of_devices"
+  },
+  {
+    "type": "get",
+    "url": "/query_device_mf_config",
+    "title": "Returns description of a device",
+    "version": "1.0.0",
+    "name": "query_device_mf_config",
+    "group": "Access_to_register_of_devices",
+    "permission": [
+      {
+        "name": "user"
+      }
+    ],
+    "description": "<p>Registers the default monitoring configuration for a device which is provided in a file in JSON-data format.</p>",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "mytoken",
+            "description": "<p>MANDATORY The token.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "device",
+            "description": "<p>MANDATORY Device name for which is requested the hardware description.</p>"
+          }
+        ]
+      }
+    },
+    "examples": [
+      {
+        "title": "Example usage:",
+        "content": "curl -s -H \"Authorization: OAuth ${mytoken}\" -XGET http://${server}:${port}/query_device_mf_config?device=\"HLRS%20Raspberry%20pi3\" ;\n\nor alternatively use service at https when available SSL certificates.",
+        "type": "json"
+      }
+    ],
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "response",
+            "description": "<p>JSON structure</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Success response:",
+          "content": "    HTTPS 200 OK\n{\n  \"took\" : 23,\n  \"timed_out\" : false,\n  \"_shards\" : {\n    \"total\" : 5,\n    \"successful\" : 5,\n    \"failed\" : 0\n  },\n  \"hits\" : {\n    \"total\" : 4,\n    \"max_score\" : 1.0,\n    \"hits\" : [ {\n      \"_index\" : \"resource_db\",\n      \"_type\" : \"mf_config\",\n      \"_id\" : \"AWby7KX7u0mrDOQ3-dgM\",\n      \"_score\" : 1.0,\n      \"_source\" : {\n        \"generic\" : {\n          \"platform_id\" : \"kkk\",\n          \"platform_id_length\" : 3,\n          \"bulk_size\" : \"8\"\n        },\n        \"plugins\" : {\n          \"mf_plugin_board_power\" : \"off\",\n          \"mf_plugin_cpu_perf\" : \"off\",\n          \"mf_plugin_cpu_temperature\" : \"off\",\n          \"mf_plugin_linux_resources\" : \"off\",\n          \"mf_plugin_linux_sys_power\" : \"off\",\n          \"mf_plugin_nvml\" : \"off\",\n          \"mf_plugin_rapl_power\" : \"off\",\n          \"mf_plugin_xilinx_fpga\" : \"off\"\n        },\n        \"timings\" : {\n          \"default\" : \"1000000000ns\",\n          \"update_configuration\" : \"360s\",\n          \"mf_plugin_board_power\" : \"1000000000ns\",\n          \"mf_plugin_cpu_perf\" : \"1000000000ns\",\n          \"mf_plugin_cpu_temperature\" : \"1000000000ns\",\n          \"mf_plugin_linux_resources\" : \"2000000000ns\",\n          \"mf_plugin_linux_sys_power\" : \"2000000000ns\",\n          \"mf_plugin_nvml\" : \"1000000000ns\",\n          \"mf_plugin_rapl_power\" : \"1000000000ns\"\n        },\n        \"mf_plugin_board_power\" : {\n          \"acme_board_name\" : \"power-jetson.local\",\n          \"device0_current\" : \"off\",\n          \"device0_vshunt\" : \"off\",\n          \"device0_vbus\" : \"off\",\n          \"device0_power\" : \"off\"\n        },\n        \"mf_plugin_cpu_perf\" : {\n          \"max_cpu_cores\" : \"4\",\n          \"mflips\" : \"off\",\n          \"mflops\" : \"off\",\n          \"mips\" : \"off\"\n        },\n        \"mf_plugin_cpu_temperature\" : {\n          \"cpu0_core0\" : \"off\",\n          \"cpu0_core1\" : \"off\"\n        },\n        \"mf_plugin_linux_resources\" : {\n          \"cpu_usage_rate\" : \"off\",\n          \"ram_usage_rate\" : \"off\",\n          \"swap_usage_rate\" : \"off\",\n          \"net_throughput\" : \"off\",\n          \"io_throughput\" : \"off\"\n        },\n        \"mf_plugin_linux_sys_power\" : {\n          \"estimated_cpu_power\" : \"off\",\n          \"estimated_wifi_power\" : \"off\",\n          \"estimated_memory_power\" : \"off\",\n          \"estimated_disk_power\" : \"off\",\n          \"estimated_total_power\" : \"off\"\n        },\n        \"mf_plugin_nvml\" : {\n          \"gpu_usage_rate\" : \"off\",\n          \"mem_usage_rate\" : \"off\",\n          \"mem_allocated\" : \"off\",\n          \"pcie_snd_throughput\" : \"off\",\n          \"pcie_rcv_throughput\" : \"off\",\n          \"temperature\" : \"off\",\n          \"power\" : \"off\"\n        },\n        \"mf_plugin_rapl_power\" : {\n          \"total_power\" : \"off\",\n          \"dram_power\" : \"off\"\n        }\n      }\n    } ]\n  }\n }",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "fields": {
+        "Error 4xx": [
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "InvalidToken",
+            "description": "<p>Error message when the token is not valid</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Response (example):",
+          "content": "HTTP/1.1 400 Bad Request\n  missing device",
+          "type": "json"
+        }
+      ]
+    },
+    "filename": "/home/jmontana/apidocs/server_code/resomanager_app.js",
+    "groupTitle": "Access_to_register_of_devices"
+  },
+  {
+    "type": "get",
+    "url": "/query_device_status",
+    "title": "Returns description of a device",
+    "version": "1.0.0",
+    "name": "query_device_status",
+    "group": "Access_to_register_of_devices",
+    "permission": [
+      {
+        "name": "user"
+      }
+    ],
+    "description": "<p>Registers the default monitoring configuration for a device which is provided in a file in JSON-data format.</p>",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "mytoken",
+            "description": "<p>MANDATORY The token.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "device",
+            "description": "<p>MANDATORY Device name for which is requested the hardware description.</p>"
+          }
+        ]
+      }
+    },
+    "examples": [
+      {
+        "title": "Example usage:",
+        "content": "curl -s -H \"Authorization: OAuth ${mytoken}\" -XGET http://${server}:${port}/query_device_status?device=\"HLRS%20Raspberry%20pi3\" ;\n\nor alternatively use service at https when available SSL certificates.",
+        "type": "json"
+      }
+    ],
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "response",
+            "description": "<p>JSON structure</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Success response:",
+          "content": "    HTTPS 200 OK\n{\n \"took\" : 1,\n \"timed_out\" : false,\n \"_shards\" : {\n   \"total\" : 1,\n   \"successful\" : 1,\n   \"failed\" : 0\n },\n \"hits\" : {\n   \"total\" : 1,\n   \"max_score\" : null,\n   \"hits\" : [ {\n     \"_index\" : \"resource_db\",\n     \"_type\" : \"status\",\n     \"_id\" : \"AWbjClJOPct1kMuA6ptF\",\n     \"_score\" : null,\n     \"_source\" : {\n       \"WorkflowID\" : \"infrastructure\",\n       \"ExperimentID\" : \"\",\n       \"TaskID\" : \"node01\",\n       \"host\" : \"node01\",\n       \"host_length\" : 6,\n       \"type\" : \"Linux_resources\",\n       \"type_length\" : 15,\n       \"local_timestamp\" : \"1555407797876.9\",\n       \"CPU_usage_rate\" : 16.22,\n       \"RAM_usage_rate\" : 65.593,\n       \"swap_usage_rate\" : 0,\n       \"net_throughput\" : 3110.203,\n       \"io_throughput\" : 0,\n       \"device_length\" : 6,\n       \"device\" : \"node01\",\n       \"gpu_power_consumption\" : 20328,\n       \"cpu_usage_rate\" : 5.003,\n       \"ram_usage_rate\" : 36.613,\n       \"local_timestamp_length\" : 15\n     },\n     \"sort\" : [ \"node01\" ]\n   } ]\n }\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "fields": {
+        "Error 4xx": [
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "InvalidToken",
+            "description": "<p>Error message when the token is not valid</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Response (example):",
+          "content": "HTTP/1.1 400 Bad Request\n  missing device",
+          "type": "json"
+        }
+      ]
+    },
+    "filename": "/home/jmontana/apidocs/server_code/resomanager_app.js",
+    "groupTitle": "Access_to_register_of_devices"
+  },
+  {
+    "type": "get",
     "url": "/_flush",
     "title": "It makes sure the data is stored in the database.",
     "version": "1.0.0",
@@ -184,6 +430,69 @@
     "groupTitle": "Administration"
   },
   {
+    "type": "post",
+    "url": "/get_log_list",
+    "title": "Registers a log.",
+    "version": "1.0.0",
+    "name": "get_log_list",
+    "group": "Administration",
+    "permission": [
+      {
+        "name": "user"
+      }
+    ],
+    "description": "<p>Returns shorted registered logs, where the shorting criteria depends on the  provided &quot;sorttype&quot; parameter.</p>",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "int",
+            "optional": false,
+            "field": "sorttype",
+            "description": "<p>Shorting criteria (OPTIONAL PARAMETER): 1: sort by id 2: sort by error code 3: sort by user 4: sort by IP address 5: sort by Message 0: sort by Date: default if not provided code</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "pretty",
+            "description": "<p>For tabulate the json response and make it more human readable.</p>"
+          }
+        ]
+      }
+    },
+    "examples": [
+      {
+        "title": "Example usage:",
+        "content": "curl -XGET  http://serveraddress:server:port/get_log_list?sorttype=\"XXX\"\\&pretty=\"true\"\nor alternatively use service at https when available SSL certificates.",
+        "type": "json"
+      }
+    ],
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "response",
+            "description": "<p>JSON structure</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Success response:",
+          "content": "HTTPS 200 OK\n{....}",
+          "type": "json"
+        }
+      ]
+    },
+    "filename": "/home/jmontana/apidocs/server_code/resomanager_app.js",
+    "groupTitle": "Administration"
+  },
+  {
     "type": "get",
     "url": "/new_db",
     "title": "Registers a new database of the server",
@@ -254,13 +563,6 @@
             "group": "Parameter",
             "type": "String",
             "optional": false,
-            "field": "mytoken",
-            "description": "<p>the token.</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "String",
-            "optional": false,
             "field": "code",
             "description": "<p>sucecss/error HTML code of the event.</p>"
           },
@@ -291,7 +593,7 @@
     "examples": [
       {
         "title": "Example usage:",
-        "content": "curl -H \"Authorization: OAuth ${mytoken}\" -H \"Content-Type: text/plain\" -XPOST http://${server}:8000/new_log?code=111\\&ip=\"10.11.12.13\"\\&message=\"Some description\"\\&user=\"jaja@abc.com\"\nor alternatively use service at https when available SSL certificates.",
+        "content": "curl -H \"Content-Type: text/plain\" -XPOST http://${server}:8000/new_log?code=111\\&ip=\"10.11.12.13\"\\&message=\"Some description\"\\&user=\"jaja@abc.com\"\nor alternatively use service at https when available SSL certificates.",
         "type": "json"
       }
     ],
